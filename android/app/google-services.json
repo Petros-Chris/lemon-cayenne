@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796686073144",
+    "project_id": "lemoncayennebase",
+    "storage_bucket": "lemoncayennebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796686073144:android:e6c80c11d56c3e9e56d5cd",
+        "android_client_info": {
+          "package_name": "lemon.cayenne.base"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQKPur-nsOR6jRoX_pf4d1O4YW_UAzdsE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
