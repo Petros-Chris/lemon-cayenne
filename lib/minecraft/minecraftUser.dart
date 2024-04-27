@@ -2,26 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:lemon_cayenne/weaponPage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lemon_cayenne/Drawer.dart';
 
-void main() {
-  runApp(
-    Directionality(
-      textDirection: TextDirection.ltr,
-      child: MaterialApp(home: ValorantPage(),debugShowCheckedModeBanner: false,),
-    ),
-  );
-}
+import 'minecraftPast.dart';
+import 'minecraftUUID.dart';
 
-class ValorantPage extends StatefulWidget {
-  const ValorantPage({super.key});
+
+class MinecraftPage extends StatefulWidget {
+  const MinecraftPage({super.key});
 
   @override
-  State<ValorantPage> createState() => ValorantPageState();
+  State<MinecraftPage> createState() => _MinecraftPageState();
 }
 
-class ValorantPageState extends State<ValorantPage> {
-  TextEditingController _search = TextEditingController();
+class _MinecraftPageState extends State<MinecraftPage> {
+  final TextEditingController _search = TextEditingController();
   int _selectedIndex = 0;
   String _name = "";
   String _id = "";
@@ -70,16 +67,16 @@ class ValorantPageState extends State<ValorantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: Text(
-          "Player Info", style: TextStyle(color: Colors.white),),
+          "Search For Current Owner", style: TextStyle(color: Colors.white),),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
         iconTheme: IconThemeData(color: Colors.white),
 
       ),
-      drawer: Drawer(),
+      drawer: DrawerNav(),
       body: Center(
         child: Column(
           children: [
@@ -100,7 +97,7 @@ class ValorantPageState extends State<ValorantPage> {
                           child: TextField(
                             controller: _search,
                             decoration: InputDecoration(
-                                hintText: "Search Player By Username",
+                                hintText: "Search For Username",
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide.none)),
                           ),
@@ -122,7 +119,18 @@ class ValorantPageState extends State<ValorantPage> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20, top: 50),
-              child: Text("Information of player would go here"),
+              child: Row(
+                children: [
+                  Text(
+                    "$_name",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  Expanded(child: SizedBox()),
+                  Text(
+                    "$_id",
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 10,
@@ -141,11 +149,15 @@ class ValorantPageState extends State<ValorantPage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Player Data',
+            label: 'Current',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mode_fan_off_outlined),
-            label: 'Weapon Data',
+            icon: Icon(Icons.search),
+            label: 'Past',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.accessibility_new),
+            label: 'UUID',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -162,7 +174,12 @@ class ValorantPageState extends State<ValorantPage> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => WeaponPage()),
+          MaterialPageRoute(builder: (context) => SeePastUsersPage()),
+        );
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SeeUserByUUIDPage()),
         );
     }
   }

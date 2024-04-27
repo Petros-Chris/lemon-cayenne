@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lemon_cayenne/Drawer.dart';
 import 'dart:convert';
 
 import 'minecraftUser.dart';
@@ -37,6 +38,7 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: Text(
           "Search For all Owners",
@@ -46,7 +48,7 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
         backgroundColor: Colors.deepPurple,
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      drawer: Drawer(),
+      drawer: DrawerNav(),
       body: Center(
         child: Column(
           children: [

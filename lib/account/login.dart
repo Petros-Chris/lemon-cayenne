@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lemon_cayenne/register.dart';
+import 'package:lemon_cayenne/account/register.dart';
 
-import 'main.dart';
+import '../main.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Your Username Or Password Is Incorrect"),
+          content: Text("Your Username Or Password Is Incdforrect"),
           duration: Duration(seconds: 2),
         ),
       );
@@ -130,10 +130,10 @@ class _LoginPageState extends State<LoginPage> {
                           builder: (context) => const RegisterPage()),
                     );
                   },
-                  child: Container(
+                  child: const SizedBox(
                     width: 200,
                     height: 100,
-                    child: const Text("Dont Have An Account? Click Here"),
+                    child: Text("Dont Have An Account? Click Here"),
                   ),
                 )
               ],

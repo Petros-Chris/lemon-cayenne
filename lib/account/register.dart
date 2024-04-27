@@ -100,8 +100,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    addUser();
+                  onPressed: () async {
+                    await addUser();
                     _username.clear();
                     _password.clear();
                   },

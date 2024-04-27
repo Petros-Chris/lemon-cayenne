@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/valorant/valorantPage.dart';
 import 'dart:convert';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../minecraft/minecraftPast.dart';
+import '../minecraft/minecraftUUID.dart';
 
-import 'minecraftPast.dart';
-import 'minecraftUUID.dart';
-
-
-class MinecraftPage extends StatefulWidget {
-  const MinecraftPage({super.key});
-
-  @override
-  State<MinecraftPage> createState() => _MinecraftPageState();
+void main() {
+  runApp(
+    Directionality(
+      textDirection: TextDirection.ltr,
+      child: MaterialApp(home: WeaponPage(),debugShowCheckedModeBanner: false,),
+    ),
+  );
 }
 
-class _MinecraftPageState extends State<MinecraftPage> {
+class WeaponPage extends StatefulWidget {
+  const WeaponPage({super.key});
+
+  @override
+  State<WeaponPage> createState() => WeaponPageState();
+}
+
+class WeaponPageState extends State<WeaponPage> {
   TextEditingController _search = TextEditingController();
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   String _name = "";
   String _id = "";
   String _url = "";
@@ -66,16 +73,16 @@ class _MinecraftPageState extends State<MinecraftPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: Text(
-          "Search For Current Owner", style: TextStyle(color: Colors.white),),
+          "Weapon Info", style: TextStyle(color: Colors.white),),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
         iconTheme: IconThemeData(color: Colors.white),
 
       ),
-      drawer: Drawer(),
+      drawer: DrawerNav(),
       body: Center(
         child: Column(
           children: [
@@ -96,7 +103,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                           child: TextField(
                             controller: _search,
                             decoration: InputDecoration(
-                                hintText: "Search For Username",
+                                hintText: "Search Weapon By Name",
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide.none)),
                           ),
@@ -118,18 +125,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20, top: 50),
-              child: Row(
-                children: [
-                  Text(
-                    "$_name",
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  Expanded(child: SizedBox()),
-                  Text(
-                    "$_id",
-                  ),
-                ],
-              ),
+              child: Text("Information of weapon would go here"),
             ),
             SizedBox(
               height: 10,
@@ -148,15 +144,11 @@ class _MinecraftPageState extends State<MinecraftPage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Current',
+            label: 'Player Data',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Past',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility_new),
-            label: 'UUID',
+            icon: Icon(Icons.mode_fan_off_outlined),
+            label: 'Weapon Data',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -170,15 +162,10 @@ class _MinecraftPageState extends State<MinecraftPage> {
       _selectedIndex = index;
     });
     switch (index) {
-      case 1:
+      case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SeePastUsersPage()),
-        );
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SeeUserByUUIDPage()),
+          MaterialPageRoute(builder: (context) => ValorantPage()),
         );
     }
   }

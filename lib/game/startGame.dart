@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lemon_cayenne/testOfGame.dart';
+import 'package:lemon_cayenne/game/testOfGame.dart';
 
 void main() {
   runApp(
