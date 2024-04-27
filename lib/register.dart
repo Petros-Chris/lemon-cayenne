@@ -4,18 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'login.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: RegisterPage(),
     );
   }
@@ -51,18 +45,18 @@ class _RegisterPageState extends State<RegisterPage> {
       'Username': _username.text,
       'Password': _password.text,
     }).then((value) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("User has been created"),
         duration: Duration(seconds: 2),
       ));
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       });
     }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Something went wrong, please try again later"),
         duration: Duration(seconds: 2),
       ));
@@ -78,7 +72,8 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: const Text('Register'),
+        centerTitle: true,
       ),
       body: Center(
         child: Row(
@@ -90,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 200,
                   child: TextField(
                     controller: _username,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: ("Username"),
                     ),
                   ),
@@ -99,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 200,
                   child: TextField(
                     controller: _password,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: ("Password"),
                     ),
                   ),
@@ -110,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     _username.clear();
                     _password.clear();
                   },
-                  child: Text("Register"),
+                  child: const Text("Register"),
                 ),
               ],
             ),

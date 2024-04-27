@@ -2,42 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'minecraftUser.dart';
-import 'minecraftPast.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SeeUserByUUIDPage extends StatefulWidget {
-  const SeeUserByUUIDPage({super.key});
+import 'minecraftPast.dart';
+import 'minecraftUUID.dart';
+
+
+class MinecraftPage extends StatefulWidget {
+  const MinecraftPage({super.key});
 
   @override
-  State<SeeUserByUUIDPage> createState() => _SeeUserByUUIDPageState();
+  State<MinecraftPage> createState() => _MinecraftPageState();
 }
 
-class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
+class _MinecraftPageState extends State<MinecraftPage> {
   TextEditingController _search = TextEditingController();
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
   String _name = "";
   String _id = "";
   String _url = "";
   var decodedResponse;
 
-  // Future<void> fetchHuman(String uuid) async {
-  //   final response = await http.get(
-  //       Uri.parse('https://sessionserver.mojang.com/session/minecraft/profile/$uuid'));
-  //
-  //   if (response.statusCode == 200) {
-  //     var jsonResponse = json.decode(response.body);
-  //
-  //     setState(() {
-  //       _name = jsonResponse['name'];
-  //       _id = jsonResponse['id'];
-  //     });
-  //   }
-  // }
+  Future<void> fetchHuman(String userName) async {
+    final response = await http.get(
+        Uri.parse('https://api.mojang.com/users/profiles/minecraft/$userName'));
 
-  Future<void> getMinecraftProfile(String uuid) async {
-    var url = Uri.parse(
-        'https://sessionserver.mojang.com/session/minecraft/profile/$uuid');
-    var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
 
@@ -45,6 +35,15 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
         _name = jsonResponse['name'];
         _id = jsonResponse['id'];
       });
+    }
+  }
+
+  Future<void> getMinecraftProfile(String userId) async {
+    var url = Uri.parse(
+        'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
 
       if (jsonResponse.containsKey('properties') &&
           jsonResponse['properties'].isNotEmpty) {
@@ -67,14 +66,14 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: Text(
-          "Search Owner Of UUID",
-          style: TextStyle(color: Colors.white),
-        ),
+          "Search For Current Owner", style: TextStyle(color: Colors.white),),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
         iconTheme: IconThemeData(color: Colors.white),
+
       ),
       drawer: Drawer(),
       body: Center(
@@ -97,7 +96,7 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
                           child: TextField(
                             controller: _search,
                             decoration: InputDecoration(
-                                hintText: "Search By UUID",
+                                hintText: "Search For Username",
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide.none)),
                           ),
@@ -110,7 +109,8 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
                   ),
                   ElevatedButton(
                       onPressed: () async {
-                        await getMinecraftProfile(_search.text);
+                        await fetchHuman(_search.text);
+                        await getMinecraftProfile(_id);
                       },
                       child: Text("Search")),
                 ],
@@ -134,7 +134,7 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
             SizedBox(
               height: 10,
             ),
-            if (_url != "")
+            if(_url != "")
               Image.network(
                 "$_url",
                 width: 200,
@@ -170,15 +170,15 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
       _selectedIndex = index;
     });
     switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MinecraftPage()),
-        );
       case 1:
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SeePastUsersPage()),
+        );
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SeeUserByUUIDPage()),
         );
     }
   }
