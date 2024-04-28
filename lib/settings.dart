@@ -12,8 +12,10 @@ class CustomizePage extends StatefulWidget {
 }
 
 class _CustomizePageState extends State<CustomizePage> {
-  String _selectedValue = 'Option 1';
-  final List<String> _options = ['Option 1', 'Option 2', 'Option 3'];
+  String _selectedValue = 'Option1';
+  final List<String> _options = ['Option1', 'Option2'];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +60,23 @@ class _CustomizePageState extends State<CustomizePage> {
                   Expanded(
                     child: SizedBox(),
                   ),
-                  Switch(
-                    value: isDark, // Current state of the switch
-                    onChanged: (bool value) {
+                  DropdownButton<String>(
+                    value: hjel,
+                    onChanged: (String? newValue) {
                       setState(() {
-                        isDark = value; // Update the state
+                        hjel = newValue!;
+                        isDark = stringToInt[hjel]!;
                       });
                       Provider.of<ThemeProvider>(context, listen: false)
                           .toggleTheme();
                     },
+                    items: stringToInt.keys.map((String value) {
+
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),

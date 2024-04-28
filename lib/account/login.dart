@@ -11,7 +11,8 @@ import '../Theme/theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  isDark = sharedPreferences.getBool('is_dark') ?? false;
+  isDark = sharedPreferences.getInt('is_dark') ?? 1;
+  hjel = intToString[sharedPreferences.getInt('is_dark')]!;
 
   await Firebase.initializeApp();
   runApp(MyApp());
