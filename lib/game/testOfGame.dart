@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lemon_cayenne/const.dart';
 import 'dart:math';
 import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:lemon_cayenne/game/startGame.dart';
 
 class MyApp extends StatelessWidget {
@@ -34,8 +34,8 @@ class _GameState extends State<Game> {
     final random = Random();
     setState(() {
       score += 100;
-      top = random.nextDouble() * 300;
-      left = random.nextDouble() * 300;
+      top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
+      left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
     });
   }
 
@@ -55,11 +55,27 @@ class _GameState extends State<Game> {
     });
   }
 
+  CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
   Future<void> checkAndUpdateHighScore() async {
-    int highestScore = await _loadScoreNumber();
+    await viewUser();
     if (score > highestScore) {
-      _saveScore();
+      await updateUser(username, score);
     }
+  }
+
+  Future<void> viewUser() async {
+    QuerySnapshot querySnapshot =
+        await users.where('Username', isEqualTo: username).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
+      highestScore = userDoc['Score'];
+    }
+  }
+
+  Future<void> updateUser(String id, int newScore) async {
+    await users.doc(id).update({'Score': newScore});
   }
 
   void _showAlertDialog(BuildContext context) {
@@ -101,26 +117,6 @@ class _GameState extends State<Game> {
     startTimer();
   }
 
-  void _saveScore() async {
-    // Get the SharedPreferences instance
-    final prefs = await SharedPreferences.getInstance();
-    // Save the score
-    prefs.setInt('score', score);
-  }
-
-  void _loadScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      score = prefs.getInt('score') ?? 0;
-    });
-  }
-
-  Future<int> _loadScoreNumber() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return prefs.getInt('score') ?? 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,15 +150,15 @@ class _GameState extends State<Game> {
         child: Stack(
           children: [
             AnimatedPositioned(
+              top: top,
+              left: left,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut,
               child: Container(
                 width: 100,
                 height: 100,
                 color: Colors.blue,
               ),
-              top: top,
-              left: left,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeInOut,
             ),
           ],
         ),

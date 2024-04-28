@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../const.dart';
 import 'login.dart';
 
 class MyApp extends StatelessWidget {
@@ -30,27 +31,14 @@ class _RegisterPageState extends State<RegisterPage> {
   //TODO: Also unsure how to add a field of id
   //TODO: find a way to stop user from writing anything he wants or submitting ''
   //TODO: a textfield for confrim password?
-  // int user_id = 0;
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
-  // Future<int> countUser() async {
-  //   QuerySnapshot length = await FirebaseFirestore.instance.collection('Users').get();
-  //   return length.docs.length + 1;
-  // }
-  var ida;
-
   Future<void> addUser() {
-    return users
-        // .doc("$user_id")
-        // .set({
-        //   'Username': _username.text,
-        //   'Password': _password.text,
-        // })
-        .add({
-      // 'id': ida,
+    return users.doc(_username.text).set({
       'Username': _username.text,
       'Password': _password.text,
+      'Score': highestScore,
     }).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(
@@ -73,18 +61,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ));
     });
   }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // var ida = countUser();
-  }
-
-// String setId() {
-//   user_id = users.count();
-//   return"$user_id";
-// }
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/const.dart';
 import 'package:lemon_cayenne/game/testOfGame.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,19 +14,25 @@ class BeforeGamingPage extends StatefulWidget {
 
 class _BeforeGamingPageState extends State<BeforeGamingPage> {
   int score = 0;
+  CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
-  void _loadScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      score = prefs.getInt('score') ?? 0;
-    });
+  Future<void> viewUser() async {
+    QuerySnapshot querySnapshot =
+        await users.where('Username', isEqualTo: username).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
+      setState(() {
+        highestScore = userDoc['Score'];
+      });
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadScore();
+    viewUser();
   }
 
   @override
@@ -54,7 +62,7 @@ class _BeforeGamingPageState extends State<BeforeGamingPage> {
               ),
             ),
             const Expanded(child: SizedBox()),
-            Text('Highest Score: $score'),
+            Text('Highest Score: $highestScore'),
             SizedBox(
               height: 30,
             ),
