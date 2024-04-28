@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/account/login.dart';
+import 'game/startGame.dart';
+import 'game/testOfGame.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';
 import 'minecraft/minecraftUser.dart';
@@ -100,15 +102,8 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
             onTap: () {
               Navigator.pop(context);
-              // Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => MyHomePage()));
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Broken AF rn'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => BeforeGamingPage()));
             },
           ),
           const Divider(height: 0),

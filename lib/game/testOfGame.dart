@@ -1,54 +1,172 @@
-import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
-import 'package:flame/game.dart';
-import 'package:flame/components.dart';
-import 'package:flame/input.dart';
-import 'package:flutter/gestures.dart';
+import 'dart:math';
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(GameWidget(game: AimClickGame()));
-}
+import 'package:lemon_cayenne/game/startGame.dart';
 
-class AimClickGame extends FlameGame {
-  late ClickableObject clickableObject;
-  TextComponent textComponet = TextComponent(
-      'HErl',
-      config: TextConfig(color: const Color(0xFFFFFFFF)),
-      );
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-
-
-    textComponet = TextComponent();
-      textComponet.anchor = Anchor.topCenter;
-      textComponet.x = size.x / 2;
-      textComponet.y = 50;
-
-    clickableObject = ClickableObject()
-      ..position = size * 0.3
-      ..width = 100
-      ..height = 100
-      ..anchor = Anchor.center;
-
-    add(textComponet);
-    add(clickableObject);
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Game(),
+    );
   }
 }
 
-class ClickableObject extends PositionComponent {
-  static final _paint = Paint()..color = Colors.red;
+class Game extends StatefulWidget {
+  const Game({super.key});
 
   @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    canvas.drawRect(size.toRect(), _paint);
+  State<Game> createState() => _GameState();
+}
+
+class _GameState extends State<Game> {
+  int score = 0;
+  Timer? time;
+  int remainingSeconds = 10;
+  double top = 100;
+  double left = 100;
+
+  void movement() {
+    final random = Random();
+    setState(() {
+      score += 100;
+      top = random.nextDouble() * 300;
+      left = random.nextDouble() * 300;
+    });
   }
 
-  bool onTapDown(TapDownInfo details) {
-    // Handle tap event here
-    removeFromParent();
-    return true; // Return true to consume the event
+  void startTimer() {
+    time?.cancel();
+
+    time = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (remainingSeconds > 0) {
+        setState(() {
+          remainingSeconds--;
+        });
+      } else {
+        time?.cancel();
+        checkAndUpdateHighScore();
+        _showAlertDialog(context);
+      }
+    });
+  }
+
+  Future<void> checkAndUpdateHighScore() async {
+    int highestScore = await _loadScoreNumber();
+    if (score > highestScore) {
+      _saveScore();
+    }
+  }
+
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Time Is Up!'),
+          content: Text('Your Final Score Is $score'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BeforeGamingPage()));
+              },
+              child: const Text('Return'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const Game()));
+              },
+              child: const Text('Try Again'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void _saveScore() async {
+    // Get the SharedPreferences instance
+    final prefs = await SharedPreferences.getInstance();
+    // Save the score
+    prefs.setInt('score', score);
+  }
+
+  void _loadScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      score = prefs.getInt('score')!;
+    });
+  }
+
+  Future<int> _loadScoreNumber() async {
+    final prefs = await SharedPreferences.getInstance();
+
+      return prefs.getInt('score')!;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                time?.cancel();
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BeforeGamingPage()));
+              },
+              child: const Row(
+                children: [
+                  Icon(Icons.arrow_back_ios),
+                  Text(" Exit"),
+                ],
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            Text("Time: $remainingSeconds"),
+            const Expanded(child: SizedBox()),
+            Text("Score: $score")
+          ],
+        ),
+      ),
+      body: GestureDetector(
+        onTap: movement,
+        child: Stack(
+          children: [
+            AnimatedPositioned(
+              child: Container(
+                width: 100,
+                height: 100,
+                color: Colors.blue,
+              ),
+              top: top,
+              left: left,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
