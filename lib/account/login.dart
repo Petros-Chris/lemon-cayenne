@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:lemon_cayenne/account/register.dart';
 import 'package:lemon_cayenne/Theme/theme_provider.dart';
 import 'package:lemon_cayenne/const.dart';
@@ -116,6 +117,10 @@ class _LoginPageState extends State<LoginPage> {
                   width: 200,
                   child: TextField(
                     controller: _username,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^[a-zA-Z0-9]+$')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: ("Username"),
                     ),
@@ -125,6 +130,9 @@ class _LoginPageState extends State<LoginPage> {
                   width: 200,
                   child: TextField(
                     controller: _password,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: ("Password"),
                     ),

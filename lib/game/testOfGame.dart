@@ -152,7 +152,7 @@ class _GameState extends State<Game> {
             AnimatedPositioned(
               top: top,
               left: left,
-              duration: const Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 0),
               curve: Curves.easeInOut,
               child: Container(
                 width: 100,

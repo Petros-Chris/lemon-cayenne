@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 import '../const.dart';
 import 'login.dart';
@@ -79,6 +80,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 200,
                   child: TextField(
                     controller: _username,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^[a-zA-Z0-9]+$')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: ("Username"),
                     ),
@@ -88,6 +93,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 200,
                   child: TextField(
                     controller: _password,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: ("Password"),
                     ),
@@ -122,4 +130,9 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+// Future<void> checkFields() async {
+//   if(_username.text)
+//
+// }
 }
