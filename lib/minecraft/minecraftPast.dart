@@ -141,12 +141,12 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
     });
     switch (index) {
       case 0:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MinecraftPage()),
         );
       case 2:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => SeeUserByUUIDPage()),
         );

@@ -2,26 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lemon_cayenne/account/register.dart';
-
+import 'package:lemon_cayenne/Theme/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
+import '../Theme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  isDark = sharedPreferences.getBool('is_dark') ?? false;
+
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: LoginPage(),
+    return ChangeNotifierProvider(
+      create: (context) => ThemeProvider(isDark),
+      builder: (context, snapshot) {
+        return MaterialApp(
+          theme: Provider.of<ThemeProvider>(context).themeData,
+          home: LoginPage(),
+        );
+      },
     );
   }
 }
-
 //TODO: Are usernames going to be unique?
 //TODO: We should probably hash passwords
 
@@ -43,31 +53,32 @@ class _LoginPageState extends State<LoginPage> {
         await users.where('Username', isEqualTo: _username.text).get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      //TODO: Is this even possible to do?
-
       var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
       String userPassword = userDoc['Password'];
 
       if (userPassword == _password.text) {
-        //ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Login in Successful!"),
+            content: Center(
+              child: Text("Login in Successful!"),
+            ),
             duration: Duration(seconds: 2),
           ),
         );
         Future.delayed(const Duration(seconds: 2), () {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),
           );
         });
-        //TODO: This part might be useless not 100 though
       } else {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Your Username Or Password Is Incorrect"),
+            content: Center(
+              child: Text("Your Username Or Password Is Incorrect"),
+            ),
             duration: Duration(seconds: 2),
           ),
         );
@@ -76,7 +87,9 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Your Username Or Password Is Incdforrect"),
+          content: Center(
+            child: Text("Your Username Or Password Is Incdforrect"),
+          ),
           duration: Duration(seconds: 2),
         ),
       );
@@ -84,10 +97,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text('Login'),
         centerTitle: true,
       ),
       body: Center(
@@ -120,11 +139,11 @@ class _LoginPageState extends State<LoginPage> {
                     _username.clear();
                     _password.clear();
                   },
-                  child: const Text("Login"),
+                  child: Text("Login"),
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const RegisterPage()),

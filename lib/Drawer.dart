@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lemon_cayenne/account/login.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';
 import 'minecraft/minecraftUser.dart';
-
-//TODO: Need to stop duplication of objects
 
 class DrawerNav extends StatefulWidget {
   const DrawerNav({super.key});
@@ -33,7 +32,6 @@ class _DrawerNavState extends State<DrawerNav> {
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                     boxShadow: [
                       BoxShadow(
@@ -44,7 +42,7 @@ class _DrawerNavState extends State<DrawerNav> {
                       ),
                     ],
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.baby_changing_station_rounded,
                     size: 90,
                   ),
@@ -66,9 +64,9 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => ValorantPage()),
+                MaterialPageRoute(builder: (context) => const ValorantPage()),
               );
             },
           ),
@@ -84,9 +82,9 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => MinecraftPage()),
+                MaterialPageRoute(builder: (context) => const MinecraftPage()),
               );
             },
           ),
@@ -102,11 +100,11 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
             onTap: () {
               Navigator.pop(context);
-              // Navigator.push(
+              // Navigator.pushReplacement(
               //     context,
               //     MaterialPageRoute(builder: (context) => MyHomePage()));
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text('Broken AF rn'),
                   duration: Duration(seconds: 2),
                 ),
@@ -125,14 +123,10 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CustomizePage()));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Logged out'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CustomizePage()));
             },
           ),
           const Divider(height: 0),
@@ -146,16 +140,16 @@ class _DrawerNavState extends State<DrawerNav> {
               ],
             ),
             onTap: () {
-              Navigator.pop(context);
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => MyHomePage()));
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Logged out'),
+                const SnackBar(
+                  content: Center(
+                    child: Text('Logged out'),
+                  ),
                   duration: Duration(seconds: 2),
                 ),
               );
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
             },
           ),
           const Divider(height: 0),

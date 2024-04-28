@@ -34,6 +34,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
+  // Future<int> countUser() async {
+  //   QuerySnapshot length = await FirebaseFirestore.instance.collection('Users').get();
+  //   return length.docs.length + 1;
+  // }
+  var ida;
+
   Future<void> addUser() {
     return users
         // .doc("$user_id")
@@ -42,25 +48,37 @@ class _RegisterPageState extends State<RegisterPage> {
         //   'Password': _password.text,
         // })
         .add({
+      // 'id': ida,
       'Username': _username.text,
       'Password': _password.text,
     }).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("User has been created"),
+        content: Center(
+          child: Text("User has been created"),
+        ),
         duration: Duration(seconds: 2),
       ));
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       });
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Something went wrong, please try again later"),
+        content: Center(
+          child: Text("Something went wrong, please try again later"),
+        ),
         duration: Duration(seconds: 2),
       ));
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // var ida = countUser();
   }
 
 // String setId() {
@@ -107,6 +125,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   child: const Text("Register"),
                 ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
+                  },
+                  child: const SizedBox(
+                    width: 200,
+                    height: 100,
+                    child: Text("Already Have An Account? Click Here"),
+                  ),
+                )
               ],
             ),
           ],
