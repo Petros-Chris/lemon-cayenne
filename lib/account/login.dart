@@ -118,8 +118,10 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     controller: _username,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'^[a-zA-Z0-9]+$')),
+                      // FilteringTextInputFormatter.allow(
+                      //     RegExp(r'^[a-zA-Z0-9]+$')),
+                      FilteringTextInputFormatter.deny(
+                          RegExp(r'[^\w\d]')),
                     ],
                     decoration: const InputDecoration(
                       labelText: ("Username"),

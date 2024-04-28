@@ -81,8 +81,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: TextField(
                     controller: _username,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'^[a-zA-Z0-9]+$')),
+                      FilteringTextInputFormatter.deny(
+                          RegExp(r'[^\w\d]')),
                     ],
                     decoration: const InputDecoration(
                       labelText: ("Username"),
