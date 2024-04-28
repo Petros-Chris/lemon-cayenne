@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/account/login.dart';
+import 'package:lemon_cayenne/main.dart';
 import 'game/startGame.dart';
 import 'game/testOfGame.dart';
 import 'settings.dart';
@@ -30,25 +31,36 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
             child: Column(
               children: [
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 3,
-                        blurRadius: 9,
-                        offset: const Offset(0, 3),
+                GestureDetector(
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 3,
+                            blurRadius: 9,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.baby_changing_station_rounded,
-                    size: 90,
-                  ),
-                ),
+                      child: const Icon(
+                        Icons.baby_changing_station_rounded,
+                        size: 90,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                      );
+                    }),
                 const SizedBox(
                   height: 5,
                 ),
@@ -102,8 +114,8 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => BeforeGamingPage()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => BeforeGamingPage()));
             },
           ),
           const Divider(height: 0),

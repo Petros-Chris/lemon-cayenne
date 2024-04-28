@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lemon_cayenne/account/register.dart';
 import 'package:lemon_cayenne/Theme/theme_provider.dart';
+import 'package:lemon_cayenne/const.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
@@ -12,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   isDark = sharedPreferences.getInt('is_dark') ?? 1;
-  hjel = intToString[sharedPreferences.getInt('is_dark')]!;
+  hjel = intToString[sharedPreferences.getInt('is_dark') ?? 1]!;
 
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -67,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             duration: Duration(seconds: 2),
           ),
         );
+        username = _username.text;
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pushReplacement(
             context,

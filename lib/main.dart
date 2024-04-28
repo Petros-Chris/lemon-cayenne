@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lemon_cayenne/game/startGame.dart';
 import 'Drawer.dart';
+import 'const.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';
 
@@ -35,8 +37,67 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       drawer: DrawerNav(),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+          child: Column(
+            children: [
+              Text("Hello $username, Where Would You Like To Go?"),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: 300,
+                height: 50,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ValorantPage(),
+                        ),
+                      );
+                    },
+                    child: Text("Valorant")),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: 300,
+                height: 50,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MinecraftPage(),
+                        ),
+                      );
+                    },
+                    child: Text("Minecraft")),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: 300,
+                height: 50,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BeforeGamingPage(),
+                        ),
+                      );
+                    },
+                    child: Text("Training Game")),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
-
-

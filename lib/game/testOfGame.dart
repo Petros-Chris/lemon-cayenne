@@ -111,14 +111,14 @@ class _GameState extends State<Game> {
   void _loadScore() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      score = prefs.getInt('score')!;
+      score = prefs.getInt('score') ?? 0;
     });
   }
 
   Future<int> _loadScoreNumber() async {
     final prefs = await SharedPreferences.getInstance();
 
-      return prefs.getInt('score')!;
+    return prefs.getInt('score') ?? 0;
   }
 
   @override
