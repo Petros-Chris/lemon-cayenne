@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'minecraftPast.dart';
 import 'minecraftUUID.dart';
-
 
 class MinecraftPage extends StatefulWidget {
   const MinecraftPage({super.key});
@@ -38,30 +36,30 @@ class _MinecraftPageState extends State<MinecraftPage> {
       });
     }
   }
+  void _loadRenderType() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      renderTypeVal = prefs.getString('render_type_val') ?? 'default';
+    });
+  }
 
-  Future<void> getMinecraftProfile(String userId) async {
-    var url = Uri.parse(
-        'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
+  void _loadRenderView() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      renderViewVal = prefs.getString('render_view_val') ?? 'full';
+    });
+  }
 
-      if (jsonResponse.containsKey('properties') &&
-          jsonResponse['properties'].isNotEmpty) {
-        String base64Value = jsonResponse['properties'][0]['value'];
-
-        String decodedJson = utf8.decode(base64Decode(base64Value));
-
-        decodedResponse = json.decode(decodedJson);
-        _url = decodedResponse['textures']['SKIN']['url'];
-
-        print(decodedResponse);
-      } else {
-        print("No properties found or properties array is empty.");
-      }
-    } else {
-      print("Failed to retrieve user profile.");
-    }
+  Future<void> HeHeHEHAW(
+      String name, String renderType, String renderCrop) async {
+    _url =
+        'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop';
+  }
+  @override
+  void initState() {
+    super.initState();
+    _loadRenderType();
+    _loadRenderView();
   }
 
   @override
@@ -70,19 +68,20 @@ class _MinecraftPageState extends State<MinecraftPage> {
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: Text(
-          "Search For Current Owner", style: TextStyle(color: Colors.white),),
+          "Search For Current Owner",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
         iconTheme: IconThemeData(color: Colors.white),
-
       ),
       drawer: DrawerNav(),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-              child: Row(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+          child: Column(
+            children: [
+              Row(
                 children: [
                   Container(
                     decoration: BoxDecoration(
@@ -111,42 +110,79 @@ class _MinecraftPageState extends State<MinecraftPage> {
                   ElevatedButton(
                       onPressed: () async {
                         await fetchHuman(_search.text);
-                        await getMinecraftProfile(_id);
+                        await HeHeHEHAW(_name, renderTypeVal, renderViewVal);
                       },
                       child: Text("Search")),
                 ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 50),
-              child: Row(
+              Row(
                 children: [
-                  Text(
-                    "$_name",
-                    style: TextStyle(fontSize: 24),
+                  Text("Render Type"),
+                  Spacer(),
+                  DropdownButton<String>(
+                    value: renderTypeVal,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        renderTypeVal = newValue!;
+                        HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+                      });
+                    },
+                    items: rendertype.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
-                  Expanded(child: SizedBox()),
-                  Text(
-                    "$_id",
+                  Spacer(),
+                  Text("Render View"),
+                  Spacer(),
+                  DropdownButton<String>(
+                    value: renderViewVal,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        renderViewVal = newValue!;
+                        HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+                      });
+                    },
+                    items: renderView.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            if(_url != "")
-              Image.network(
-                "$_url",
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-              )
-          ],
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 50),
+                child: Row(
+                  children: [
+                    Text(
+                      "$_name",
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    Expanded(child: SizedBox()),
+                    Text(
+                      "$_id",
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              if (_url != "")
+                Image.network(
+                  _url,
+                  height: 400,
+                ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Current',
@@ -184,3 +220,28 @@ class _MinecraftPageState extends State<MinecraftPage> {
     }
   }
 }
+
+// Future<void> getMinecraftProfile(String userId) async {
+//   var url = Uri.parse(
+//       'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
+//   var response = await http.get(url);
+//   if (response.statusCode == 200) {
+//     var jsonResponse = json.decode(response.body);
+//
+//     if (jsonResponse.containsKey('properties') &&
+//         jsonResponse['properties'].isNotEmpty) {
+//       String base64Value = jsonResponse['properties'][0]['value'];
+//
+//       String decodedJson = utf8.decode(base64Decode(base64Value));
+//
+//       decodedResponse = json.decode(decodedJson);
+//       _url = decodedResponse['textures']['SKIN']['url'];
+//
+//       print(decodedResponse);
+//     } else {
+//       print("No properties found or properties array is empty.");
+//     }
+//   } else {
+//     print("Failed to retrieve user profile.");
+//   }
+// }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/Drawer.dart';
 import 'package:lemon_cayenne/const.dart';
 import 'package:lemon_cayenne/game/testOfGame.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BeforeGamingPage extends StatefulWidget {
   const BeforeGamingPage({super.key});
@@ -23,6 +22,7 @@ class _BeforeGamingPageState extends State<BeforeGamingPage> {
     if (querySnapshot.docs.isNotEmpty) {
       var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
       setState(() {
+        highestScore = 0;
         highestScore = userDoc['Score'];
       });
     }

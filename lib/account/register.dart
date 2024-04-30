@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
-import '../const.dart';
+import 'hash.dart';
 import 'login.dart';
 
 class MyApp extends StatelessWidget {
@@ -27,19 +26,21 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _username = TextEditingController();
   TextEditingController _password = TextEditingController();
+  TextEditingController _confirmPassword = TextEditingController();
+  bool _obsurceText = true;
 
-  //TODO: Id look pretty instead of random numbers in firebase?
-  //TODO: Also unsure how to add a field of id
-  //TODO: find a way to stop user from writing anything he wants or submitting ''
   //TODO: a textfield for confrim password?
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
   Future<void> addUser() {
+    var salt = generateSalt();
+    String hashedPassword = hashPassword(_password.text, salt);
     return users.doc(_username.text).set({
       'Username': _username.text,
-      'Password': _password.text,
-      'Score': highestScore,
+      'Password': hashedPassword,
+      'Salt': salt,
+      'Score': 0,
     }).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(
@@ -81,31 +82,88 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: TextField(
                     controller: _username,
                     inputFormatters: [
-                      FilteringTextInputFormatter.deny(
-                          RegExp(r'[^\w\d]')),
+                      FilteringTextInputFormatter.deny(RegExp(r'[^\w\d]')),
                     ],
                     decoration: const InputDecoration(
                       labelText: ("Username"),
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: 200,
-                  child: TextField(
-                    controller: _password,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  height: 100,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 170,
+                        child: TextField(
+                          controller: _password,
+                          obscureText: _obsurceText,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
+                          decoration: const InputDecoration(
+                            labelText: ("Password"),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _obsurceText = !_obsurceText;
+                          });
+                        },
+                        child: Icon(Icons.search),
+                      ),
                     ],
-                    decoration: const InputDecoration(
-                      labelText: ("Password"),
-                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 200,
+                  height: 100,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 170,
+                        child: TextField(
+                          controller: _confirmPassword,
+                          obscureText: _obsurceText,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
+                          decoration: const InputDecoration(
+                            labelText: ("Confirm Password"),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _obsurceText = !_obsurceText;
+                          });
+                        },
+                        child: Icon(Icons.search),
+                      ),
+                    ],
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    await addUser();
-                    _username.clear();
-                    _password.clear();
+                    if (confirmPassword()) {
+                      await addUser();
+                      _username.clear();
+                      _password.clear();
+                      _confirmPassword.clear();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Center(
+                          child: Text("Your Password Does Not Match"),
+                        ),
+                        duration: Duration(seconds: 2),
+                      ));
+                      _password.clear();
+                      _confirmPassword.clear();
+                    }
                   },
                   child: const Text("Register"),
                 ),
@@ -131,8 +189,11 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-// Future<void> checkFields() async {
-//   if(_username.text)
-//
-// }
+  bool confirmPassword() {
+    if (_password == _confirmPassword) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

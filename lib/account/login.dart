@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:lemon_cayenne/account/hash.dart';
 import 'package:lemon_cayenne/account/register.dart';
 import 'package:lemon_cayenne/Theme/theme_provider.dart';
 import 'package:lemon_cayenne/const.dart';
@@ -35,7 +36,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-//TODO: Are usernames going to be unique?
 //TODO: We should probably hash passwords
 
 class LoginPage extends StatefulWidget {
@@ -48,6 +48,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  bool _obsurceText = true;
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
@@ -57,9 +58,11 @@ class _LoginPageState extends State<LoginPage> {
 
     if (querySnapshot.docs.isNotEmpty) {
       var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
-      String userPassword = userDoc['Password'];
+      String userHash = userDoc['Password'];
+      String userSalt = userDoc['Salt'];
 
-      if (userPassword == _password.text) {
+      String password = hashPassword(_password.text, userSalt);
+      if (password == userHash) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -120,8 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                     inputFormatters: [
                       // FilteringTextInputFormatter.allow(
                       //     RegExp(r'^[a-zA-Z0-9]+$')),
-                      FilteringTextInputFormatter.deny(
-                          RegExp(r'[^\w\d]')),
+                      FilteringTextInputFormatter.deny(RegExp(r'[^\w\d]')),
                     ],
                     decoration: const InputDecoration(
                       labelText: ("Username"),
@@ -130,14 +132,31 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(
                   width: 200,
-                  child: TextField(
-                    controller: _password,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  height: 100,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 170,
+                        child: TextField(
+                          controller: _password,
+                          obscureText: _obsurceText,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
+                          decoration: const InputDecoration(
+                            labelText: ("Password"),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _obsurceText = !_obsurceText;
+                          });
+                        },
+                        child: Icon(Icons.search),
+                      ),
                     ],
-                    decoration: const InputDecoration(
-                      labelText: ("Password"),
-                    ),
                   ),
                 ),
                 ElevatedButton(

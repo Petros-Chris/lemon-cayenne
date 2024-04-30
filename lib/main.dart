@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lemon_cayenne/game/startGame.dart';
 import 'Drawer.dart';
 import 'const.dart';
-import 'settings.dart';
 import 'valorant/valorantPage.dart';
 
 import 'minecraft/minecraftUser.dart';

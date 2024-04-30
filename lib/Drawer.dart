@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/account/login.dart';
 import 'package:lemon_cayenne/main.dart';
 import 'game/startGame.dart';
-import 'game/testOfGame.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';
 import 'minecraft/minecraftUser.dart';
