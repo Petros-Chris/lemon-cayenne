@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/account/login.dart';
-import 'package:lemon_cayenne/main.dart';
+import 'package:lemon_cayenne/home.dart';
 import 'game/startGame.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';

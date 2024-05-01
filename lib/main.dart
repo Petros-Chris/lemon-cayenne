@@ -1,100 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lemon_cayenne/game/startGame.dart';
-import 'Drawer.dart';
-import 'const.dart';
-import 'valorant/valorantPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'minecraft/minecraftUser.dart';
+import 'Theme/colorTheme.dart';
+import 'Theme/theme.dart';
+import 'account/login.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  isDark = sharedPreferences.getInt('is_dark') ?? 1;
+  colorOption = sharedPreferences.getString('app_bar_color') ?? 'default';
+  hjel = intToString[sharedPreferences.getInt('is_dark') ?? 1]!;
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
-      appBar: AppBar(
-        title: Text("The Lemon Project"),
-        centerTitle: true,
-      ),
-      drawer: DrawerNav(),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-          child: Column(
-            children: [
-              Text("Hello $username, Where Would You Like To Go?"),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 300,
-                height: 50,
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ValorantPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Valorant")),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 300,
-                height: 50,
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MinecraftPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Minecraft")),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 300,
-                height: 50,
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BeforeGamingPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Training Game")),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  await Firebase.initializeApp();
+  runApp(const MyApp());
 }
