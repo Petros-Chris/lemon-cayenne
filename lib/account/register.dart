@@ -29,8 +29,6 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _confirmPassword = TextEditingController();
   bool _obsurceText = true;
 
-  //TODO: a textfield for confrim password?
-
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
   Future<void> addUser() {
@@ -190,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   bool confirmPassword() {
-    if (_password == _confirmPassword) {
+    if (_password.text == _confirmPassword.text) {
       return true;
     } else {
       return false;

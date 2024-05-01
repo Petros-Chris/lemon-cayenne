@@ -5,6 +5,7 @@ import 'package:lemon_cayenne/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Theme/colorTheme.dart';
 import 'const.dart';
 
 class CustomizePage extends StatefulWidget {
@@ -15,9 +16,6 @@ class CustomizePage extends StatefulWidget {
 }
 
 class _CustomizePageState extends State<CustomizePage> {
-  String _selectedValue = 'Option1';
-  final List<String> _options = ['Option1', 'Option2'];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,13 +45,15 @@ class _CustomizePageState extends State<CustomizePage> {
                     child: SizedBox(),
                   ),
                   DropdownButton<String>(
-                    value: _selectedValue,
+                    value: colorOption,
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedValue = newValue!;
+                        colorOption = newValue!;
                       });
+                      Provider.of<ColorProvider>(context, listen: false)
+                          .toggleColor();
                     },
-                    items: _options.map((String value) {
+                    items: colorOptions.map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -153,17 +153,14 @@ class _CustomizePageState extends State<CustomizePage> {
       ),
     );
   }
+
   void _saveRenderView() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('render_view_val', renderViewVal);
   }
 
-
-
   void _saveRenderType() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('render_type_val', renderTypeVal);
   }
-
-
 }

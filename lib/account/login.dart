@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:lemon_cayenne/Theme/colorTheme.dart';
 import 'package:lemon_cayenne/account/hash.dart';
 import 'package:lemon_cayenne/account/register.dart';
 import 'package:lemon_cayenne/Theme/theme_provider.dart';
@@ -15,6 +16,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   isDark = sharedPreferences.getInt('is_dark') ?? 1;
+  colorOption = sharedPreferences.getString('app_bar_color') ?? 'default';
   hjel = intToString[sharedPreferences.getInt('is_dark') ?? 1]!;
 
   await Firebase.initializeApp();
@@ -26,17 +28,24 @@ class MyApp extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ThemeProvider(isDark),
+      create: (context) => ColorProvider(colorOption),
       builder: (context, snapshot) {
-        return MaterialApp(
-          theme: Provider.of<ThemeProvider>(context).themeData,
-          home: LoginPage(),
+        return ChangeNotifierProvider(
+          create: (context) => ThemeProvider(isDark),
+          builder: (context, snapshot) {
+            return MaterialApp(
+              theme: Provider.of<ThemeProvider>(context).themeData.copyWith(
+                    appBarTheme: AppBarTheme(
+                        color: Provider.of<ColorProvider>(context).appColor),
+                  ),
+              home: LoginPage(),
+            );
+          },
         );
       },
     );
   }
 }
-//TODO: We should probably hash passwords
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

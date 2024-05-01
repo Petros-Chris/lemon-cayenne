@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 late int isDark;
 late String hjel;
 final Map<int, String> intToString = {
-  0 : 'Amoled',
-  1 : 'Light',
-  2 : 'Dark',
+  0: 'Amoled',
+  1: 'Light',
+  2: 'Dark',
 };
 final Map<String, int> stringToInt = {
-  'Amoled' : 0,
-  'Light' : 1,
-  'Dark' : 2,
+  'Amoled': 0,
+  'Light': 1,
+  'Dark': 2,
 };
-
 
 final ThemeData amoledTheme = ThemeData(
   useMaterial3: true,
@@ -21,14 +20,9 @@ final ThemeData amoledTheme = ThemeData(
     brightness: Brightness.dark,
     background: Colors.black,
   ),
-
   drawerTheme: DrawerThemeData(
     backgroundColor: Colors.black,
   ),
-  //   appBarTheme: AppBarTheme(
-  //   backgroundColor: Colors.black,
-  // ),
-
   snackBarTheme: SnackBarThemeData(
     backgroundColor: Colors.black,
     contentTextStyle: TextStyle(color: Colors.white),

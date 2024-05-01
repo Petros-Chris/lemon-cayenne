@@ -24,6 +24,7 @@ class ThemeProvider with ChangeNotifier {
     if (isDark == 0) {
       sharedPreferences.setInt('is_dark', 0);
       _themeData = amoledTheme;
+      notifyListeners();
     }
     if (isDark == 1) {
       sharedPreferences.setInt('is_dark', 1);
