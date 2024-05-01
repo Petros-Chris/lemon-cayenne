@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lemon_cayenne/Drawer.dart';
 import 'dart:convert';
+import 'matchInfo.dart';
 
 import 'package:lemon_cayenne/valorant/weaponPage.dart';
+
+
+final String apiKey = 'Your_API_Key';
+final String baseUrl = 'https://api.henrikdev.xyz/valorant/v3';
 
 class ValorantPage extends StatefulWidget {
   const ValorantPage({super.key});
@@ -13,54 +18,52 @@ class ValorantPage extends StatefulWidget {
 }
 
 class ValorantPageState extends State<ValorantPage> {
-  TextEditingController _search = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _tagController = TextEditingController();
   int _selectedIndex = 0;
-  String _name = "";
-  String _id = "";
-  String _url = "";
+  List<Map<String, dynamic>> infoMap = [];
   var decodedResponse;
+  bool flag = false;
 
-  Future<void> fetchHuman(String userName) async {
-    final response = await http.get(
-        Uri.parse('https://api.mojang.com/users/profiles/minecraft/$userName'));
-
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-
-      setState(() {
-        _name = jsonResponse['name'];
-        _id = jsonResponse['id'];
-      });
-    }
-  }
-
-  Future<void> getMinecraftProfile(String userId) async {
-    var url = Uri.parse(
-        'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-
-      if (jsonResponse.containsKey('properties') &&
-          jsonResponse['properties'].isNotEmpty) {
-        String base64Value = jsonResponse['properties'][0]['value'];
-
-        String decodedJson = utf8.decode(base64Decode(base64Value));
-
-        decodedResponse = json.decode(decodedJson);
-        _url = decodedResponse['textures']['SKIN']['url'];
-
-        print(decodedResponse);
-      } else {
-        print("No properties found or properties array is empty.");
-      }
-    } else {
-      print("Failed to retrieve user profile.");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    Future<List<Map<String, dynamic>>> getMatches(String region, String name, String tag) async {
+      var url = Uri.parse('$baseUrl/matches/$region/$name/$tag');
+      var response = await http.get(url, headers: {'X-API-Key': apiKey});
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        List<dynamic> matches = data['data'];
+        List<Map<String, dynamic>> playerMatches = [];
+
+        for (var match in matches) {
+          // Locate player stats within the 'players -> all_players' list
+          Map<String, dynamic>? player = match['players']['all_players']
+              .firstWhere((p) => p['name'].toLowerCase() == name.toLowerCase() && p['tag'].toLowerCase() == tag.toLowerCase(), orElse: () => null);
+
+          if (player != null) {
+            // Now that you have the specific player, extract their stats
+            Map<String, dynamic> playerStats = {
+              'matchId': match['metadata']['matchid'],
+              'kills': player['stats']['kills'],
+              'deaths': player['stats']['deaths'],
+              'assists': player['stats']['assists'],
+              'score': '${match['teams']['red']['score']}-${match['teams']['blue']['score']}',
+              // Add other details you want to extract
+            };
+            // Get match score if needed, assuming 'red' and 'blue' are teams
+
+
+            playerMatches.add(playerStats);
+          }
+        }
+        return playerMatches;
+      } else {
+        throw Exception('Failed to load matches');
+      }
+    }
     return Scaffold(
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
@@ -90,9 +93,30 @@ class ValorantPageState extends State<ValorantPage> {
                         SizedBox(
                           width: 200,
                           child: TextField(
-                            controller: _search,
+                            controller: _usernameController,
                             decoration: InputDecoration(
-                                hintText: "Search Player By Username",
+                                hintText: "Search For Username",
+                                border: UnderlineInputBorder(
+                                    borderSide: BorderSide.none)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.search),
+                        SizedBox(
+                          width: 75,
+                          child: TextField(
+                            controller: _tagController,
+                            decoration: InputDecoration(
+                                hintText: "Tag",
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide.none)),
                           ),
@@ -103,32 +127,60 @@ class ValorantPageState extends State<ValorantPage> {
                   SizedBox(
                     width: 20,
                   ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        await fetchHuman(_search.text);
-                        await getMinecraftProfile(_id);
-                      },
-                      child: Text("Search")),
+
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 50),
-              child: Text("Information of player would go here"),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            if(_url != "")
-              Image.network(
-                "$_url",
-                width: 200,
+            ElevatedButton(
+                onPressed: () async {
+                  infoMap = await getMatches('NA', _usernameController.text, _tagController.text);
+                  flag = true;
+
+                },
+                child: Text("Search")),
+
+              Container(
+                width: 500,
                 height: 200,
-                fit: BoxFit.cover,
-              )
+                child: ListView.builder(
+                    itemCount: infoMap.length,
+                    // Ensure you have the correct item count
+                    itemBuilder: (context, index) {
+                      var match = infoMap[index]; // Get current match data
+                      return ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                           //Text('Match ID: ${match['matchId']}'),
+                            // Display Match ID
+                            Text('Kills: ${match['kills']}'),
+                            // Display Kills
+                            Text('Deaths: ${match['deaths']}'),
+                            // Display Deaths
+                            Text('Assists: ${match['assists']}'),
+                            // Display Assists
+                            Text('Score: ${match['score']}'),
+                            // Display Score
+                          ],
+                        ),
+                      );
+                    }
+                ),
+
+
+              ),
+
+
+
           ],
         ),
+
       ),
+
+
+
+
+
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
