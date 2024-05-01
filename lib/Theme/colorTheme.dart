@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final List<String> colorOptions = ['default', 'green', 'blue', 'red'];
+final List<String> colorOptions = ['default', 'green', 'blue', 'red', 'yellow'];
 var colorOption = "default";
 
 class ColorProvider with ChangeNotifier {
@@ -18,6 +18,8 @@ class ColorProvider with ChangeNotifier {
       appColor = Colors.green;
     } else if (colorOption == "default") {
       appColor = null;
+    } else if (colorOption == "yellow") {
+      appColor = Colors.yellow;
     }
   }
 
@@ -39,6 +41,10 @@ class ColorProvider with ChangeNotifier {
     if (colorOption == 'blue') {
       sharedPreferences.setString('app_bar_color', 'blue');
       appColor = Colors.blue;
+    }
+    if (colorOption == 'yellow') {
+      sharedPreferences.setString('app_bar_color', 'yellow');
+      appColor = Colors.yellow;
     }
     notifyListeners();
   }

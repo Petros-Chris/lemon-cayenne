@@ -25,7 +25,7 @@ class _DrawerNavState extends State<DrawerNav> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.deepOrange, Colors.green],
+                colors: [Colors.yellow, Colors.orangeAccent],
               ),
             ),
             child: Column(
@@ -39,16 +39,15 @@ class _DrawerNavState extends State<DrawerNav> {
                             const BorderRadius.all(Radius.circular(20)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            spreadRadius: 3,
-                            blurRadius: 9,
-                            offset: const Offset(0, 3),
+                            color: Colors.red.withOpacity(0.3),
+                            spreadRadius: 0,
+                            blurRadius: 50,
+                            offset: const Offset(0, 0),
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.baby_changing_station_rounded,
-                        size: 90,
+                      child: Image.asset(
+                        'assets/lemon.png',
                       ),
                     ),
                     onTap: () {
