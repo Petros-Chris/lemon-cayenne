@@ -84,7 +84,7 @@ class _DrawerNavState extends State<DrawerNav> {
           ),
           const Divider(height: 0),
           ListTile(
-            leading: const Icon(Icons.baby_changing_station),
+            leading: const Icon(Icons.accessibility_new_sharp),
             title: const Row(
               children: [
                 Text('Minecraft Api'),
