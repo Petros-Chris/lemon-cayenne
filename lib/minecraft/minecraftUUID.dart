@@ -72,11 +72,8 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
       appBar: AppBar(
         title: Text(
           "Search Owner Of UUID",
-          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        iconTheme: IconThemeData(color: Colors.white),
       ),
       drawer: DrawerNav(),
       body: Center(

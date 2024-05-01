@@ -20,12 +20,13 @@ Future<void> main() async {
   hjel = intToString[sharedPreferences.getInt('is_dark') ?? 1]!;
 
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => ColorProvider(colorOption),
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
                     appBarTheme: AppBarTheme(
                         color: Provider.of<ColorProvider>(context).appColor),
                   ),
-              home: LoginPage(),
+              home: const LoginPage(),
             );
           },
         );
@@ -116,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
         centerTitle: true,
       ),
       body: Center(
@@ -163,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                             _obsurceText = !_obsurceText;
                           });
                         },
-                        child: Icon(Icons.search),
+                        child: const Icon(Icons.search),
                       ),
                     ],
                   ),
@@ -174,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                     _username.clear();
                     _password.clear();
                   },
-                  child: Text("Login"),
+                  child: const Text("Login"),
                 ),
                 GestureDetector(
                   onTap: () {

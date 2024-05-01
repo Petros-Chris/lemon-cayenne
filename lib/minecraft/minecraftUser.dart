@@ -22,8 +22,12 @@ class _MinecraftPageState extends State<MinecraftPage> {
   String _id = "";
   String _url = "";
   var decodedResponse;
+  String _profileName = "";
 
   Future<void> fetchHuman(String userName) async {
+    setState(() {
+      isLoadingFetch = true;
+    });
     final response = await http.get(
         Uri.parse('https://api.mojang.com/users/profiles/minecraft/$userName'));
 
@@ -33,9 +37,14 @@ class _MinecraftPageState extends State<MinecraftPage> {
       setState(() {
         _name = jsonResponse['name'];
         _id = jsonResponse['id'];
+        isLoadingFetch = false;
       });
     }
   }
+
+  bool isLoadingFetch = false;
+  bool isLoadingImage = false;
+
   void _loadRenderType() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -52,9 +61,31 @@ class _MinecraftPageState extends State<MinecraftPage> {
 
   Future<void> HeHeHEHAW(
       String name, String renderType, String renderCrop) async {
+    setState(() {
+      isLoadingImage = true;
+    });
     _url =
         'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop';
+    setState(() {
+      isLoadingImage = false;
+    });
   }
+
+  // Future<void> getMinecraftProfile(String userId) async {
+  //   var url = Uri.parse(
+  //       'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
+  //   var response = await http.get(url);
+  //   if (response.statusCode == 200) {
+  //     var jsonResponse = json.decode(response.body);
+  //
+  //     setState(() {
+  //       _profileName = jsonResponse['name'];
+  //     });
+  //   } else {
+  //     print("Failed to retrieve user profile.");
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -67,18 +98,15 @@ class _MinecraftPageState extends State<MinecraftPage> {
     return Scaffold(
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Search For Current Owner",
-          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        iconTheme: IconThemeData(color: Colors.white),
       ),
-      drawer: DrawerNav(),
+      drawer: const DrawerNav(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
           child: Column(
             children: [
               Row(
@@ -86,16 +114,16 @@ class _MinecraftPageState extends State<MinecraftPage> {
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search),
+                        const Icon(Icons.search),
                         SizedBox(
                           width: 200,
                           child: TextField(
                             controller: _search,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: "Search For Username",
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide.none)),
@@ -104,21 +132,22 @@ class _MinecraftPageState extends State<MinecraftPage> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   ElevatedButton(
                       onPressed: () async {
                         await fetchHuman(_search.text);
+                        // await getMinecraftProfile(_id);
                         await HeHeHEHAW(_name, renderTypeVal, renderViewVal);
                       },
-                      child: Text("Search")),
+                      child: const Text("Search")),
                 ],
               ),
               Row(
                 children: [
-                  Text("Render Type"),
-                  Spacer(),
+                  const Text("Render Type"),
+                  const Spacer(),
                   DropdownButton<String>(
                     value: renderTypeVal,
                     onChanged: (String? newValue) {
@@ -134,9 +163,9 @@ class _MinecraftPageState extends State<MinecraftPage> {
                       );
                     }).toList(),
                   ),
-                  Spacer(),
-                  Text("Render View"),
-                  Spacer(),
+                  const Spacer(),
+                  const Text("Render View"),
+                  const Spacer(),
                   DropdownButton<String>(
                     value: renderViewVal,
                     onChanged: (String? newValue) {
@@ -154,22 +183,25 @@ class _MinecraftPageState extends State<MinecraftPage> {
                   ),
                 ],
               ),
+              if (isLoadingFetch) CircularProgressIndicator(),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 50),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: Row(
                   children: [
                     Text(
                       "$_name",
-                      style: TextStyle(fontSize: 24),
+                      style: const TextStyle(fontSize: 24),
                     ),
-                    Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
                     Text(
                       "$_id",
+                      style: const TextStyle(fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               if (_url != "")
@@ -210,12 +242,12 @@ class _MinecraftPageState extends State<MinecraftPage> {
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SeePastUsersPage()),
+          MaterialPageRoute(builder: (context) => const SeePastUsersPage()),
         );
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SeeUserByUUIDPage()),
+          MaterialPageRoute(builder: (context) => const SeeUserByUUIDPage()),
         );
     }
   }

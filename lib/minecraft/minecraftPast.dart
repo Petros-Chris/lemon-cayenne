@@ -42,11 +42,8 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
       appBar: AppBar(
         title: Text(
           "Search For all Owners",
-          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        iconTheme: IconThemeData(color: Colors.white),
       ),
       drawer: DrawerNav(),
       body: Center(
@@ -80,9 +77,11 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
                   SizedBox(
                     width: 20,
                   ),
-                  ElevatedButton(onPressed: () async {
-                    await fetchHuman(_search.text);
-                  }, child: Text("Search")),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await fetchHuman(_search.text);
+                      },
+                      child: Text("Search")),
                 ],
               ),
             ),
