@@ -1,10 +1,11 @@
+import 'dart:io';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:lemon_cayenne/Drawer.dart';
 import 'package:lemon_cayenne/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'minecraftPast.dart';
 import 'minecraftUUID.dart';
 
@@ -22,7 +23,8 @@ class _MinecraftPageState extends State<MinecraftPage> {
   String _id = "";
   String _url = "";
   var decodedResponse;
-  String _profileName = "";
+  bool failed = false;
+  bool hasLoaded = false;
 
   Future<void> fetchHuman(String userName) async {
     setState(() {
@@ -37,6 +39,14 @@ class _MinecraftPageState extends State<MinecraftPage> {
       setState(() {
         _name = jsonResponse['name'];
         _id = jsonResponse['id'];
+        isLoadingFetch = false;
+        hasLoaded = true;
+        failed = false;
+      });
+      await HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+    } else {
+      setState(() {
+        failed = true;
         isLoadingFetch = false;
       });
     }
@@ -71,19 +81,16 @@ class _MinecraftPageState extends State<MinecraftPage> {
     });
   }
 
-  // Future<void> getMinecraftProfile(String userId) async {
-  //   var url = Uri.parse(
-  //       'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
-  //   var response = await http.get(url);
-  //   if (response.statusCode == 200) {
-  //     var jsonResponse = json.decode(response.body);
-  //
-  //     setState(() {
-  //       _profileName = jsonResponse['name'];
-  //     });
-  //   } else {
-  //     print("Failed to retrieve user profile.");
-  //   }
+  // Future<void> custom(
+  //     String name, String renderType, String renderCrop, Map<String,String> cameraPosition, Map<String,String> cameraFocalPoint) async {
+  //   setState(() {
+  //     isLoadingImage = true;
+  //   });
+  //   _url =
+  //   'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop?cameraPosition=$cameraPosition&cameraFocalPoint=$cameraFocalPoint';
+  //   setState(() {
+  //     isLoadingImage = false;
+  //   });
   // }
 
   @override
@@ -138,77 +145,104 @@ class _MinecraftPageState extends State<MinecraftPage> {
                   ElevatedButton(
                       onPressed: () async {
                         await fetchHuman(_search.text);
-                        // await getMinecraftProfile(_id);
-                        await HeHeHEHAW(_name, renderTypeVal, renderViewVal);
                       },
                       child: const Text("Search")),
                 ],
               ),
-              Row(
-                children: [
-                  const Text("Render Type"),
-                  const Spacer(),
-                  DropdownButton<String>(
-                    value: renderTypeVal,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        renderTypeVal = newValue!;
-                        HeHeHEHAW(_name, renderTypeVal, renderViewVal);
-                      });
-                    },
-                    items: rendertype.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  const Spacer(),
-                  const Text("Render View"),
-                  const Spacer(),
-                  DropdownButton<String>(
-                    value: renderViewVal,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        renderViewVal = newValue!;
-                        HeHeHEHAW(_name, renderTypeVal, renderViewVal);
-                      });
-                    },
-                    items: renderView.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              if (isLoadingFetch) CircularProgressIndicator(),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: Row(
-                  children: [
-                    Text(
-                      "$_name",
-                      style: const TextStyle(fontSize: 24),
+              ElevatedButton(
+                  onPressed: () async {
+                    http.Response response = await http.get(Uri.parse(_url));
+                    File file = File(
+                        "/storage/emulated/0/Download/$_name-$renderTypeVal-$renderViewVal.png");
+                    file.writeAsBytes(response.bodyBytes);
+
+                    AwesomeNotifications().createNotification(
+                      content: NotificationContent(
+                        id: 10,
+                        channelKey: 'basic_channel',
+                        title: 'Simple Notifcation',
+                        body: 'Simple Body',
+                      ),
+                    );
+                  },
+                  child: Text("Test?")),
+              hasLoaded
+                  ? Row(
+                      children: [
+                        const Text("Render Type"),
+                        const Spacer(),
+                        DropdownButton<String>(
+                          value: renderTypeVal,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              renderTypeVal = newValue!;
+                              HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+                            });
+                          },
+                          items: rendertype.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                        const Spacer(),
+                        const Text("Render View"),
+                        const Spacer(),
+                        DropdownButton<String>(
+                          value: renderViewVal,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              renderViewVal = newValue!;
+                              HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+                            });
+                          },
+                          items: renderView.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              if (isLoadingFetch) const CircularProgressIndicator(),
+              failed != true
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 20),
+                          child: Row(
+                            children: [
+                              Text(
+                                _name,
+                                style: const TextStyle(fontSize: 24),
+                              ),
+                              const Expanded(child: SizedBox()),
+                              Text(
+                                _id,
+                                style: const TextStyle(fontSize: 12),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        if (_url != "")
+                          Image.network(
+                            _url,
+                            height: 400,
+                          ),
+                      ],
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                      child: Text("Username doesn't exist"),
                     ),
-                    const Expanded(child: SizedBox()),
-                    Text(
-                      "$_id",
-                      style: const TextStyle(fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              if (_url != "")
-                Image.network(
-                  _url,
-                  height: 400,
-                ),
             ],
           ),
         ),
