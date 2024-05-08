@@ -69,83 +69,175 @@ class _RegisterPageState extends State<RegisterPage> {
         title: const Text('Register'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: 200,
-                  child: TextField(
-                    controller: _username,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.deny(RegExp(r'[^\w\d]')),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 40, right: 40, top: 40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Image.asset(
+                  'assets/lemon.png',
+                  width: 160,
+                ),
+              ),
+              // Text("Login", style: TextStyle(fontSize: 32),),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.yellow,
+                      Colors.orange,
                     ],
-                    decoration: const InputDecoration(
-                      labelText: ("Username"),
+                  ),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: TextField(
+                  controller: _username,
+                  inputFormatters: [
+                    // FilteringTextInputFormatter.allow(
+                    //     RegExp(r'^[a-zA-Z0-9]+$')),
+                    FilteringTextInputFormatter.deny(RegExp(r'[^\w\d]')),
+                  ],
+                  decoration: const InputDecoration(
+                    labelText: ("Username"),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.yellow,
+                      Color(0xF6F079FF),
+                    ],
+                  ),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width - 126,
+                      child: TextField(
+                        controller: _password,
+                        obscureText: _obsurceText,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                        ],
+                        decoration: const InputDecoration(
+                            labelText: ("Password"), border: InputBorder.none),
+                      ),
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obsurceText = !_obsurceText;
+                        });
+                      },
+                      child: const Icon(Icons.search),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 200,
-                  height: 100,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 170,
-                        child: TextField(
-                          controller: _password,
-                          obscureText: _obsurceText,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                          ],
-                          decoration: const InputDecoration(
-                            labelText: ("Password"),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _obsurceText = !_obsurceText;
-                          });
-                        },
-                        child: Icon(Icons.search),
-                      ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.yellow,
+                      Color(0xF6F079FF),
                     ],
                   ),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                SizedBox(
-                  width: 200,
-                  height: 100,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 170,
-                        child: TextField(
-                          controller: _confirmPassword,
-                          obscureText: _obsurceText,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                          ],
-                          decoration: const InputDecoration(
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width - 126,
+                      child: TextField(
+                        controller: _confirmPassword,
+                        obscureText: _obsurceText,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                        ],
+                        decoration: const InputDecoration(
                             labelText: ("Confirm Password"),
-                          ),
-                        ),
+                            border: InputBorder.none),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _obsurceText = !_obsurceText;
-                          });
-                        },
-                        child: Icon(Icons.search),
-                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obsurceText = !_obsurceText;
+                        });
+                      },
+                      child: const Icon(Icons.search),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 200,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.yellow,
+                      Colors.yellowAccent,
                     ],
                   ),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                ElevatedButton(
+                child: ElevatedButton(
                   onPressed: () async {
                     if (confirmPassword()) {
                       await addUser();
@@ -163,25 +255,42 @@ class _RegisterPageState extends State<RegisterPage> {
                       _confirmPassword.clear();
                     }
                   },
-                  child: const Text("Register"),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                    );
-                  },
-                  child: const SizedBox(
-                    width: 200,
-                    height: 100,
-                    child: Text("Already Have An Account? Click Here"),
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all(Colors.transparent),
+                    elevation: MaterialStateProperty.all(0),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
                   ),
-                )
-              ],
-            ),
-          ],
+                  child: const Text(
+                    "Register",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
+              ),
+
+              const SizedBox(
+                height: 40,
+              ),
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: const SizedBox(
+                  width: 200,
+                  height: 100,
+                  child: Text("Already Have An Account? Click Here"),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
