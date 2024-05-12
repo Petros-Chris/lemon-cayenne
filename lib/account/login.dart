@@ -1,4 +1,5 @@
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -23,8 +24,8 @@ class MyApp extends StatelessWidget {
           create: (context) => ThemeProvider(isDark),
           builder: (context, snapshot) {
             return MaterialApp(
-              navigatorKey: navigatorKey,
-              title: 'Awesome Notification Demo',
+              //navigatorKey: navigatorKey,
+              //title: 'Awesome Notification Demo',
               theme: Provider.of<ThemeProvider>(context).themeData.copyWith(
                     appBarTheme: AppBarTheme(
                         color: Provider.of<ColorProvider>(context).appColor),

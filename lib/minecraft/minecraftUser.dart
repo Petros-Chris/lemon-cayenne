@@ -5,9 +5,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:lemon_cayenne/Drawer.dart';
 import 'package:lemon_cayenne/const.dart';
+import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'minecraftPast.dart';
 import 'minecraftUUID.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MinecraftPage extends StatefulWidget {
   const MinecraftPage({super.key});
@@ -21,10 +23,13 @@ class _MinecraftPageState extends State<MinecraftPage> {
   int _selectedIndex = 0;
   String _name = "";
   String _id = "";
-  String _url = "";
   var decodedResponse;
+
   bool failed = false;
-  bool hasLoaded = false;
+  bool hasImageLoaded = false;
+  bool hasTextLoaded = false;
+  bool isLoadingFetch = false;
+  bool isLoadingImage = false;
 
   Future<void> fetchHuman(String userName) async {
     setState(() {
@@ -39,21 +44,18 @@ class _MinecraftPageState extends State<MinecraftPage> {
       setState(() {
         _name = jsonResponse['name'];
         _id = jsonResponse['id'];
+        hasTextLoaded = true;
         isLoadingFetch = false;
-        hasLoaded = true;
-        failed = false;
       });
       await HeHeHEHAW(_name, renderTypeVal, renderViewVal);
     } else {
       setState(() {
-        failed = true;
+        hasTextLoaded = false;
+        hasImageLoaded = false;
         isLoadingFetch = false;
       });
     }
   }
-
-  bool isLoadingFetch = false;
-  bool isLoadingImage = false;
 
   void _loadRenderType() async {
     final prefs = await SharedPreferences.getInstance();
@@ -74,11 +76,40 @@ class _MinecraftPageState extends State<MinecraftPage> {
     setState(() {
       isLoadingImage = true;
     });
-    _url =
-        'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop';
-    setState(() {
-      isLoadingImage = false;
-    });
+    final response = await http.get(Uri.parse(
+        'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop'));
+    if (response.statusCode == 200) {
+      setState(() {
+        url = response.request!.url.toString();
+        isLoadingImage = false;
+        hasImageLoaded = true;
+        failed = false;
+      });
+    } else {
+      setState(() {
+        failed = true;
+        isLoadingImage = false;
+        hasImageLoaded = false;
+      });
+    }
+  }
+
+  // void openPhotosApp() async {
+  //   const urlw = 'content://media/internal/images/media';
+  //   if (await canLaunch(urlw)) {
+  //     await launch(urlw);
+  //   } else {
+  //     // Handle error
+  //     print('Could not launch $urlw');
+  //   }
+  // }
+
+  void openPhotosApp() async {
+    // Specify the path to the downloads folder
+    String downloadsPath = "/storage/emulated/0/Download/";
+
+    // Open the downloads folder
+    await OpenFile.open(downloadsPath);
   }
 
   // Future<void> custom(
@@ -95,10 +126,32 @@ class _MinecraftPageState extends State<MinecraftPage> {
 
   @override
   void initState() {
-    super.initState();
     _loadRenderType();
     _loadRenderView();
+    super.initState();
   }
+
+  // static downloadCallBack(ids, status, progress) {
+  //   SendPort? sendPort = IsolateNameServer.lookupPortByName('downloadingphoto');
+  //   sendPort?.send(progress);
+  // }
+
+  // void downloadFile() async {
+  //   final status = await Permission.storage.request();
+  //   print("OER");
+  //   if (status.isGranted) {
+  //     print("PErmiss");
+  //     final baseStorage = await getExternalStorageDirectory();
+  //
+  //     final id = await FlutterDownloader.enqueue(
+  //         url:
+  //             "https://static.vecteezy.com/vite/assets/photo-masthead-375-b8ae1548.webp",
+  //         savedDir: baseStorage!.path,
+  //         fileName: 'fileName');
+  //   } else {
+  //     print("OW");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -149,24 +202,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                       child: const Text("Search")),
                 ],
               ),
-              ElevatedButton(
-                  onPressed: () async {
-                    http.Response response = await http.get(Uri.parse(_url));
-                    File file = File(
-                        "/storage/emulated/0/Download/$_name-$renderTypeVal-$renderViewVal.png");
-                    file.writeAsBytes(response.bodyBytes);
-
-                    AwesomeNotifications().createNotification(
-                      content: NotificationContent(
-                        id: 10,
-                        channelKey: 'basic_channel',
-                        title: 'Simple Notifcation',
-                        body: 'Simple Body',
-                      ),
-                    );
-                  },
-                  child: Text("Test?")),
-              hasLoaded
+              hasTextLoaded && hasImageLoaded
                   ? Row(
                       children: [
                         const Text("Render Type"),
@@ -207,8 +243,29 @@ class _MinecraftPageState extends State<MinecraftPage> {
                       ],
                     )
                   : const SizedBox(),
+              hasTextLoaded && hasImageLoaded
+                  ? GestureDetector(
+                      child: Icon(Icons.download),
+                      onTap: () async {
+                        http.Response response = await http.get(Uri.parse(url));
+                        File file = File(
+                            "/storage/emulated/0/Download/$_name-$renderTypeVal-$renderViewVal.png");
+                        file.writeAsBytes(response.bodyBytes);
+
+                        AwesomeNotifications().createNotification(
+                          content: NotificationContent(
+                            id: 10,
+                            channelKey: 'download_channel',
+                            title: 'File Has Been Downloaded',
+                            body: 'Click here to go checkout the new file',
+                          ),
+                        );
+                        openPhotosApp();
+                      },
+                    )
+                  : const SizedBox(),
               if (isLoadingFetch) const CircularProgressIndicator(),
-              failed != true
+              hasImageLoaded || failed == false
                   ? Column(
                       children: [
                         Padding(
@@ -232,9 +289,9 @@ class _MinecraftPageState extends State<MinecraftPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        if (_url != "")
+                        if (url != "")
                           Image.network(
-                            _url,
+                            url,
                             height: 400,
                           ),
                       ],

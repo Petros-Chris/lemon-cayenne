@@ -4,9 +4,8 @@ int highestScore = 0;
 var renderViewVal = "full";
 
 final List<String> renderView = ['full', 'bust', 'face'];
-
+String url = "";
 var renderTypeVal = "default";
-
 final List<String> rendertype = [
   'default',
   'marching',

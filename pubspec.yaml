@@ -32,16 +32,27 @@ dependencies:
     sdk: flutter
   http: any
   flame: any
+
   firebase_core: any
   cloud_firestore: any
   firebase_core_platform_interface: any
+
   shared_preferences: any
   provider: any
   flutter_lints: any
   flutter_cube: any
   crypto: any
+
+
+  awesome_notifications: any
+  flutter_displaymode: any
+  url_launcher: any
+  open_file: any
+  dio: any
+
+  flutter_downloader: ^1.5.0
+  path_provider: any
   permission_handler: any
-  awesome_notifications: ^0.7.4+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
