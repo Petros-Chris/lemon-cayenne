@@ -9,6 +9,9 @@ import 'package:lemon_cayenne/valorant/weaponPage.dart';
 
 final String apiKey = 'Your_API_Key';
 final String baseUrl = 'https://api.henrikdev.xyz/valorant/v3';
+bool _isLoading = false;
+String _errorMessage = '';
+
 
 class ValorantPage extends StatefulWidget {
   const ValorantPage({super.key});
@@ -34,36 +37,50 @@ class ValorantPageState extends State<ValorantPage> {
       var response = await http.get(url, headers: {'X-API-Key': apiKey});
 
       if (response.statusCode == 200) {
+        _errorMessage = '';
         Map<String, dynamic> data = json.decode(response.body);
         List<dynamic> matches = data['data'];
         List<Map<String, dynamic>> playerMatches = [];
 
         for (var match in matches) {
-          // Locate player stats within the 'players -> all_players' list
-          Map<String, dynamic>? player = match['players']['all_players']
-              .firstWhere((p) => p['name'].toLowerCase() == name.toLowerCase() && p['tag'].toLowerCase() == tag.toLowerCase(), orElse: () => null);
+          List<dynamic> players = match['players']['all_players'];
+          Map<String, dynamic>? player = players.firstWhere(
+                  (p) => p['name'].toLowerCase() == name.toLowerCase() && p['tag'].toLowerCase() == tag.toLowerCase(),
+              orElse: () => null
+          );
 
           if (player != null) {
-            // Now that you have the specific player, extract their stats
+            String agentIconUrl = player['assets']['agent']['small'];
             Map<String, dynamic> playerStats = {
               'matchId': match['metadata']['matchid'],
               'kills': player['stats']['kills'],
               'deaths': player['stats']['deaths'],
               'assists': player['stats']['assists'],
-              'score': '${match['teams']['red']['score']}-${match['teams']['blue']['score']}',
-              // Add other details you want to extract
+              'score': '${match['teams']['red']['rounds_won']}-${match['teams']['blue']['rounds_won']}',
+              'map': match['metadata']['map'],
+              'gameMode': match['metadata']['mode'],
+              'characterIconSmall': agentIconUrl,
             };
-            // Get match score if needed, assuming 'red' and 'blue' are teams
-
-
             playerMatches.add(playerStats);
           }
         }
+
+        if (playerMatches.isEmpty) {
+          _errorMessage = "No matches found for the player.";
+        }
+
         return playerMatches;
+      } else if (response.statusCode == 404) {
+        _errorMessage = "Player not found.";
+        return []; // Return an empty list when no player is found
       } else {
-        throw Exception('Failed to load matches');
+        _errorMessage = "${response.statusCode}";
+        throw Exception('Failed to load matches with status code: ${response.statusCode}');
+
       }
     }
+
+
     return Scaffold(
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
@@ -75,7 +92,7 @@ class ValorantPageState extends State<ValorantPage> {
 
       ),
       drawer: DrawerNav(),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
@@ -132,43 +149,84 @@ class ValorantPageState extends State<ValorantPage> {
               ),
             ),
             ElevatedButton(
-                onPressed: () async {
-                  infoMap = await getMatches('NA', _usernameController.text, _tagController.text);
-                  flag = true;
-
+                onPressed: () {
+                  if (_usernameController.text.isNotEmpty && _tagController.text.isNotEmpty) {
+                    FocusScope.of(context).unfocus();
+                    setState(() { _isLoading = true; });
+                    getMatches('NA', _usernameController.text, _tagController.text).then((matches) {
+                      setState(() {
+                        infoMap = matches;
+                        _isLoading = false;
+                      });
+                    });
+                  }
                 },
-                child: Text("Search")),
+                child: Text("Search")
+            ),
 
-              Container(
-                width: 500,
-                height: 200,
-                child: ListView.builder(
-                    itemCount: infoMap.length,
-                    // Ensure you have the correct item count
-                    itemBuilder: (context, index) {
-                      var match = infoMap[index]; // Get current match data
-                      return ListTile(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+
+
+            if (_isLoading)
+              Center(child: CircularProgressIndicator())
+            else if (_errorMessage.isNotEmpty)
+              Center(child: Text(_errorMessage)) // Display this message if no player data was found
+            else
+            Container(
+              width: 500,
+              height: 530,
+              child: ListView.builder(
+                itemCount: infoMap.length,
+                itemBuilder: (context, index) {
+                  var match = infoMap[index]; // Get current match data
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    margin: EdgeInsets.all(8), // Adds spacing around each match item
+                    padding: EdgeInsets.all(8), // Adds padding within each match item
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                           //Text('Match ID: ${match['matchId']}'),
-                            // Display Match ID
-                            Text('Kills: ${match['kills']}'),
-                            // Display Kills
-                            Text('Deaths: ${match['deaths']}'),
-                            // Display Deaths
-                            Text('Assists: ${match['assists']}'),
-                            // Display Assists
-                            Text('Score: ${match['score']}'),
-                            // Display Score
+                            Image.network(
+                              match['characterIconSmall'], // This is the agent icon
+                              width: 30,
+                              height: 30,
+                            ),
+                            SizedBox(width: 50),
+                            // This Column is for displaying Map and Game Mode beneath the agent icon
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Map: ${match['map']}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                  Text('Game Mode: ${match['gameMode']}', style: TextStyle(fontSize: 16)),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      );
-                    }
-                ),
-
-
+                        SizedBox(height: 8), // Spacing between header and stats
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Kills: ${match['kills']}'),
+                            Text('Deaths: ${match['deaths']}'),
+                            Text('Assists: ${match['assists']}'),
+                            Text('Score: ${match['score']}'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
+            ),
+
 
 
 
