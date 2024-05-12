@@ -179,48 +179,57 @@ class ValorantPageState extends State<ValorantPage> {
                   itemCount: infoMap.length,
                   itemBuilder: (context, index) {
                     var match = infoMap[index]; // Get current match data
-                    return Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.deepPurple),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      margin: EdgeInsets.all(8), // Adds spacing around each match item
-                      padding: EdgeInsets.all(8), // Adds padding within each match item
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Image.network(
-                                match['characterIconSmall'], // This is the agent icon
-                                width: 30,
-                                height: 30,
-                              ),
-                              SizedBox(width: 50),
-                              // This Column is for displaying Map and Game Mode beneath the agent icon
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Map: ${match['map']}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                    Text('Game Mode: ${match['gameMode']}', style: TextStyle(fontSize: 16)),
-                                  ],
+                    return InkWell(  // Using InkWell for visual feedback on tap
+                      onTap: () {
+                        print('Navigating to MatchInfo with data: $match');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MatchInfo(match: match)),
+                        );
+
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        margin: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Image.network(
+                                  match['characterIconSmall'], // Agent icon
+                                  width: 30,
+                                  height: 30,
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8), // Spacing between header and stats
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text('Kills: ${match['kills']}'),
-                              Text('Deaths: ${match['deaths']}'),
-                              Text('Assists: ${match['assists']}'),
-                              Text('Score: ${match['score']}'),
-                            ],
-                          ),
-                        ],
+                                SizedBox(width: 50),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Map: ${match['map']}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                      Text('Game Mode: ${match['gameMode']}', style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text('Kills: ${match['kills']}'),
+                                Text('Deaths: ${match['deaths']}'),
+                                Text('Assists: ${match['assists']}'),
+                                Text('Score: ${match['score']}'),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
