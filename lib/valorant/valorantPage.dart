@@ -60,6 +60,8 @@ class ValorantPageState extends State<ValorantPage> {
               'map': match['metadata']['map'],
               'gameMode': match['metadata']['mode'],
               'characterIconSmall': agentIconUrl,
+              'players_red': match['players']['red'],
+              'players_blue': match['players']['blue'],
             };
             playerMatches.add(playerStats);
           }
@@ -182,6 +184,9 @@ class ValorantPageState extends State<ValorantPage> {
                     return InkWell(  // Using InkWell for visual feedback on tap
                       onTap: () {
                         print('Navigating to MatchInfo with data: $match');
+                        // Future.delayed(Duration(seconds: 5),
+                        //
+                        // );
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MatchInfo(match: match)),

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class MatchInfo extends StatelessWidget {
   final Map<String, dynamic> match;
 
-  MatchInfo({Key? key, required this.match}) : super(key: key);
+  MatchInfo({super.key, required this.match});
 
   @override
   Widget build(BuildContext context) {
     // Directly accessing the red and blue teams from the match data
-    List<dynamic> redTeam = match['players']['red'] as List<dynamic>;
-    List<dynamic> blueTeam = match['players']['blue'] as List<dynamic>;
+    List<dynamic> redTeam = match['players_red'];
+    List<dynamic> blueTeam = match['players_blue'];
 
     return Scaffold(
       appBar: AppBar(
@@ -20,10 +20,18 @@ class MatchInfo extends StatelessWidget {
           children: [
             buildMatchDetails(match),
             SizedBox(height: 10),
-            Text('Red Team', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red)),
+            Text('Red Team',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red)),
             buildPlayerList(redTeam),
             SizedBox(height: 10),
-            Text('Blue Team', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue)),
+            Text('Blue Team',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue)),
             buildPlayerList(blueTeam),
           ],
         ),
@@ -34,9 +42,9 @@ class MatchInfo extends StatelessWidget {
   Widget buildMatchDetails(Map<String, dynamic> matchData) {
     return Column(
       children: [
-        Text('Map: ${matchData['metadata']['map']}', style: TextStyle(fontSize: 16)),
-        Text('Mode: ${matchData['metadata']['mode']}', style: TextStyle(fontSize: 16)),
-        Text('Score: ${matchData['teams']['red']['rounds_won']} - ${matchData['teams']['blue']['rounds_won']}', style: TextStyle(fontSize: 16)),
+        Text('Map: ${match['map']}', style: TextStyle(fontSize: 16)),
+        Text('Mode: ${match['gameMode']}', style: TextStyle(fontSize: 16)),
+        Text('Score: ${match['score']}', style: TextStyle(fontSize: 16)),
       ],
     );
   }
@@ -51,7 +59,8 @@ class MatchInfo extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text('${player['name']}#${player['tag']}'),
-            subtitle: Text('Agent: ${player['character']} - Rank: ${player['currenttier_patched']}'),
+            subtitle: Text(
+                'Agent: ${player['character']} - Rank: ${player['currenttier_patched']}'),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
