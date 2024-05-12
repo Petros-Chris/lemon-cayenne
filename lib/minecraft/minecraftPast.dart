@@ -19,6 +19,7 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
   String _name = "";
   String _id = "";
   String _url = "";
+
   var decodedResponse;
 
   Future<void> fetchHuman(String userName) async {
@@ -40,32 +41,32 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
     return Scaffold(
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Search For all Owners",
         ),
         centerTitle: true,
       ),
-      drawer: DrawerNav(),
+      drawer: const DrawerNav(),
       body: Center(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
               child: Row(
                 children: [
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search),
+                        const Icon(Icons.search),
                         SizedBox(
                           width: 200,
                           child: TextField(
                             controller: _search,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: "Search For Username",
                                 border: UnderlineInputBorder(
                                     borderSide: BorderSide.none)),
@@ -74,33 +75,33 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   ElevatedButton(
                       onPressed: () async {
                         await fetchHuman(_search.text);
                       },
-                      child: Text("Search")),
+                      child: const Text("Search")),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 50),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
               child: Row(
                 children: [
                   Text(
                     "$_name",
-                    style: TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 24),
                   ),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                   Text(
                     "$_id",
                   ),
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             if (_url != "")
@@ -114,7 +115,7 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Current',
@@ -142,12 +143,12 @@ class _SeePastUsersPageState extends State<SeePastUsersPage> {
       case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MinecraftPage()),
+          MaterialPageRoute(builder: (context) => const MinecraftPage()),
         );
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SeeUserByUUIDPage()),
+          MaterialPageRoute(builder: (context) => const SeeUserByUUIDPage()),
         );
     }
   }

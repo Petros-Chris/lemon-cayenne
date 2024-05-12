@@ -47,6 +47,7 @@ dependencies:
   awesome_notifications: any
   flutter_displaymode: any
   url_launcher: any
+  android_intent: any
   open_file: any
   dio: any
 
@@ -83,6 +84,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/lemon.png
+    - assets/minecraftIcon.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

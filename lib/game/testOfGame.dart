@@ -42,17 +42,20 @@ class _GameState extends State<Game> {
   void startTimer() {
     time?.cancel();
 
-    time = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (remainingSeconds > 0) {
-        setState(() {
-          remainingSeconds--;
-        });
-      } else {
-        time?.cancel();
-        checkAndUpdateHighScore();
-        _showAlertDialog(context);
-      }
-    });
+    time = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (remainingSeconds > 0) {
+          setState(() {
+            remainingSeconds--;
+          });
+        } else {
+          time?.cancel();
+          checkAndUpdateHighScore();
+          _showAlertDialog(context);
+        }
+      },
+    );
   }
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');

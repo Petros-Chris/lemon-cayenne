@@ -2,13 +2,11 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Theme/colorTheme.dart';
 import 'Theme/theme.dart';
 import 'account/login.dart';
-import 'notification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -30,7 +30,6 @@ class _BeforeGamingPageState extends State<BeforeGamingPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     viewUser();
   }
@@ -55,7 +54,7 @@ class _BeforeGamingPageState extends State<BeforeGamingPage> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                   ),
                   Text(
-                    "There will be red squares that will appear on your display, click them as fast as you can",
+                    "There will be blue squares that will appear on your display, click them as fast as you can",
                     style: TextStyle(fontSize: 24),
                   ),
                 ],
