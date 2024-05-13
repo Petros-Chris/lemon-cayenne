@@ -4,7 +4,7 @@ import 'package:lemon_cayenne/Drawer.dart';
 import 'dart:convert';
 
 import 'minecraftUser.dart';
-import 'minecraftPast.dart';
+import 'minecraftCreate.dart';
 
 class SeeUserByUUIDPage extends StatefulWidget {
   const SeeUserByUUIDPage({super.key});
@@ -177,7 +177,7 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
       case 1:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SeePastUsersPage()),
+          MaterialPageRoute(builder: (context) => MinecraftCustomLook()),
         );
     }
   }

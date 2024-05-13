@@ -6,26 +6,43 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:lemon_cayenne/Drawer.dart';
 import 'package:lemon_cayenne/const.dart';
-import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'minecraftCreate.dart';
 import 'minecraftUUID.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class MinecraftPage extends StatefulWidget {
-  const MinecraftPage({super.key});
+import 'minecraftUser.dart';
+
+class MinecraftCustomLook extends StatefulWidget {
+  const MinecraftCustomLook({super.key});
 
   @override
-  State<MinecraftPage> createState() => _MinecraftPageState();
+  State<MinecraftCustomLook> createState() => _MinecraftCustomLookState();
 }
 
-class _MinecraftPageState extends State<MinecraftPage> {
+class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
   final TextEditingController _search = TextEditingController();
-  int _selectedIndex = 0;
+  final TextEditingController _renderScale = TextEditingController();
+  final TextEditingController _directlightIntensity = TextEditingController();
+  final TextEditingController _globallightIntensity = TextEditingController();
+  final TextEditingController _xCamPos = TextEditingController(text: "11.92");
+  final TextEditingController _yCamPos = TextEditingController(text: "15.81");
+  final TextEditingController _zCamPos = TextEditingController(text: "-29.71");
+  final TextEditingController _xCamFocPon = TextEditingController(text: "0.31");
+  final TextEditingController _yCamFocPon =
+      TextEditingController(text: "18.09");
+  final TextEditingController _zCamFocPon = TextEditingController(text: "1.32");
+
+  bool isometric = false;
+  bool dropShadow = false;
+  String borderColor = "ff0000"; //hex value
+  String cameraPostion = "";
+  String cameraFocalPoint = "";
+  String _renderTypeVal = "";
+  String _renderViewVal = "";
+
+  int _selectedIndex = 1;
   String _name = "";
   String _id = "";
   String _url = "";
-  String _url2 = "";
   var decodedResponse;
 
   bool failed = false;
@@ -50,7 +67,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
         hasTextLoaded = true;
         isLoadingFetch = false;
       });
-      await HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+      custom(_name, renderTypeVal, renderViewVal);
     } else {
       setState(() {
         failed = true;
@@ -61,10 +78,61 @@ class _MinecraftPageState extends State<MinecraftPage> {
     }
   }
 
+  Future<void> custom(
+    String name,
+    String renderType,
+    String renderCrop,
+  ) async {
+    setState(() {
+      isLoadingImage = true;
+      Map<String, String> jsonDataCamPos = {
+        "x": _xCamPos.text,
+        "y": _yCamPos.text,
+        "z": _zCamPos.text,
+      };
+
+      cameraPostion = jsonEncode(jsonDataCamPos);
+
+      Map<String, String> jsonDataCamFocPo = {
+        "x": _xCamFocPon.text,
+        "y": _yCamFocPon.text,
+        "z": _zCamFocPon.text,
+      };
+
+      cameraFocalPoint = jsonEncode(jsonDataCamFocPo);
+    });
+    final response = await http.get(Uri.parse(
+        'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop?'
+        'isometric=$isometric&dropShadow=$dropShadow'
+        '&renderScale=${_renderScale.text}'
+        '&cameraPosition=$cameraPostion&cameraFocalPoint=$cameraFocalPoint'
+        '&dirLightIntensity=${_directlightIntensity.text}'
+        '&globalLightIntensity=${_globallightIntensity.text}'));
+    //'&borderHighlight=true'
+    //&borderHighlightRadius=20'
+    //'&borderHighlightColor=$borderColor'
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _url = response.request!.url.toString();
+        isLoadingImage = false;
+        hasImageLoaded = true;
+        failed = false;
+      });
+    } else {
+      setState(() {
+        failed = true;
+        isLoadingImage = false;
+        hasImageLoaded = false;
+      });
+    }
+  }
+
   void _loadRenderType() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       renderTypeVal = prefs.getString('render_type_val') ?? 'default';
+      _renderTypeVal = prefs.getString('render_type_val') ?? 'default';
     });
   }
 
@@ -72,85 +140,9 @@ class _MinecraftPageState extends State<MinecraftPage> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       renderViewVal = prefs.getString('render_view_val') ?? 'full';
+      _renderViewVal = prefs.getString('render_view_val') ?? 'full';
     });
   }
-
-  Future<void> HeHeHEHAW(
-      String name, String renderType, String renderCrop) async {
-    setState(() {
-      isLoadingImage = true;
-    });
-    final response = await http.get(Uri.parse(
-        'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop'));
-    if (response.statusCode == 200) {
-      setState(() {
-        _url = response.request!.url.toString();
-        isLoadingImage = false;
-        hasImageLoaded = true;
-        failed = false;
-      });
-    } else {
-      setState(() {
-        failed = true;
-        isLoadingImage = false;
-        hasImageLoaded = false;
-      });
-    }
-  }
-
-  Future<void> loadCustomCreation() async {
-    setState(() {
-      isLoadingImage = true;
-    });
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      setState(() {
-        _url = response.request!.url.toString();
-        isLoadingImage = false;
-        hasImageLoaded = true;
-        failed = false;
-      });
-    } else {
-      setState(() {
-        failed = true;
-        isLoadingImage = false;
-        hasImageLoaded = false;
-      });
-    }
-  }
-
-  Future<void> getMinecraftProfile(String userId) async {
-    var url = Uri.parse(
-        'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-
-      if (jsonResponse.containsKey('properties') &&
-          jsonResponse['properties'].isNotEmpty) {
-        String base64Value = jsonResponse['properties'][0]['value'];
-        String decodedJson = utf8.decode(base64Decode(base64Value));
-        var decodedResponse = json.decode(decodedJson);
-
-        setState(() {
-          _url2 = decodedResponse['textures']['SKIN']['url'];
-        });
-      } else {
-        print("No properties found or properties array is empty.");
-      }
-    } else {
-      print("Failed to retrieve user profile.");
-    }
-  }
-
-  // void openPhotosApp() async {
-  //   const urlw = 'content://com.android.providers.downloads.documents/all_downloads';
-  //   if (await canLaunch(urlw)) {
-  //     await launch(urlw);
-  //   } else {
-  //     print('Could not launch $urlw');
-  //   }
-  // }
 
   void openPhotosApp() {
     AndroidIntent intent = const AndroidIntent(
@@ -172,7 +164,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: const Text(
-          "Search For Current Owner",
+          "Create A Look 😝",
         ),
         centerTitle: true,
       ),
@@ -210,6 +202,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                   ),
                   ElevatedButton(
                       onPressed: () async {
+                        FocusScope.of(context).unfocus();
                         await fetchHuman(_search.text);
                       },
                       child: const Text("Search")),
@@ -225,40 +218,15 @@ class _MinecraftPageState extends State<MinecraftPage> {
                           onChanged: (String? newValue) {
                             setState(() {
                               renderTypeVal = newValue!;
-
-                              switch (renderTypeVal) {
-                                case 'mojavatar':
-                                  {
-                                    if (renderViewVal == 'face') {
-                                      renderViewVal = 'bust';
-                                    }
-
-                                    renderView = ['full', 'bust'];
-                                    HeHeHEHAW(
-                                        _name, renderTypeVal, renderViewVal);
-                                    break;
-                                  }
-                                case 'head':
-                                  {
-                                    if (renderViewVal != 'full') {
-                                      renderViewVal = 'full';
-                                    }
-                                    renderView = ['full'];
-                                    HeHeHEHAW(
-                                        _name, renderTypeVal, renderViewVal);
-                                    break;
-                                  }
-                                case 'custom':
-                                  {
-                                    loadCustomCreation();
-                                  }
-                                default:
-                                  {
-                                    renderView = ['full', 'bust', 'face'];
-                                    HeHeHEHAW(
-                                        _name, renderTypeVal, renderViewVal);
-                                  }
-                              }
+                              custom(
+                                _name,
+                                renderTypeVal,
+                                renderViewVal,
+                                // cameraPosition,
+                                // cameraFocalPoint,
+                                // cameraFOV,
+                                //isometric,
+                              );
                             });
                           },
                           items: rendertype.map((String value) {
@@ -276,7 +244,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                           onChanged: (String? newValue) {
                             setState(() {
                               renderViewVal = newValue!;
-                              HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+                              custom(_name, renderTypeVal, renderViewVal);
                             });
                           },
                           items: renderView.map((String value) {
@@ -289,6 +257,88 @@ class _MinecraftPageState extends State<MinecraftPage> {
                       ],
                     )
                   : const SizedBox(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Toggle Isometric"),
+                  Switch(
+                    value: isometric,
+                    onChanged: (value) {
+                      setState(() {
+                        isometric = value;
+                        custom(_name, renderTypeVal, renderViewVal);
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("Toggle Shadow"),
+                  Switch(
+                    value: dropShadow,
+                    onChanged: (value) {
+                      setState(() {
+                        dropShadow = value;
+                        custom(_name, renderTypeVal, renderViewVal);
+                      });
+                    },
+                  ),
+                ],
+              ),
+              TextField(
+                controller: _directlightIntensity,
+                decoration: InputDecoration(
+                  labelText: "DirectLight",
+                ),
+              ),
+              TextField(
+                controller: _globallightIntensity,
+                decoration: InputDecoration(
+                  labelText: "GlobalLight",
+                ),
+              ),
+              TextField(
+                controller: _renderScale,
+                decoration: InputDecoration(
+                  labelText: "RenderScale(max is 3)",
+                ),
+              ),
+              TextField(
+                controller: _xCamPos,
+                decoration: InputDecoration(
+                  labelText: "x for camera position",
+                ),
+              ),
+              TextField(
+                controller: _yCamPos,
+                decoration: InputDecoration(
+                  labelText: "y for camera position",
+                ),
+              ),
+              TextField(
+                controller: _zCamPos,
+                decoration: InputDecoration(
+                  labelText: "z for camera position",
+                ),
+              ),
+              TextField(
+                controller: _xCamFocPon,
+                decoration: InputDecoration(
+                  labelText: "x for camera focal position",
+                ),
+              ),
+              TextField(
+                controller: _yCamFocPon,
+                decoration: InputDecoration(
+                  labelText: "y for camera focal position",
+                ),
+              ),
+              TextField(
+                controller: _zCamFocPon,
+                decoration: InputDecoration(
+                  labelText: "z for camera focal position",
+                ),
+              ),
               if (isLoadingFetch) const CircularProgressIndicator(),
               hasImageLoaded || failed == false
                   ? Column(
@@ -338,40 +388,6 @@ class _MinecraftPageState extends State<MinecraftPage> {
                         GestureDetector(
                           child: const Row(
                             children: [
-                              Text("Download Raw Skin"),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(Icons.download),
-                            ],
-                          ),
-                          onTap: () async {
-                            await getMinecraftProfile(_id);
-                            String timeStamp =
-                                "${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}";
-                            http.Response response =
-                                await http.get(Uri.parse(_url2));
-                            File file = File(
-                                "/storage/emulated/0/Download/$_name-Skin-$timeStamp.png");
-                            file.writeAsBytes(response.bodyBytes);
-
-                            AwesomeNotifications().createNotification(
-                              content: NotificationContent(
-                                id: 10,
-                                channelKey: 'download_channel',
-                                title: 'File Has Been Downloaded',
-                                //body: 'Click here to go checkout the new file',
-                              ),
-                            );
-                            openPhotosApp();
-                          },
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        GestureDetector(
-                          child: const Row(
-                            children: [
                               Text("Download Skin"),
                               SizedBox(
                                 width: 10,
@@ -402,6 +418,18 @@ class _MinecraftPageState extends State<MinecraftPage> {
                       ],
                     )
                   : const SizedBox(),
+              ElevatedButton(
+                onPressed: () {
+                  url = //Hardcoded, should change :>
+                      'https://starlightskins.lunareclipse.studio/render/$_renderTypeVal/$_name/$_renderViewVal?'
+                      'isometric=$isometric&dropShadow=$dropShadow'
+                      '&renderScale=${_renderScale.text}'
+                      '&cameraPosition=$cameraPostion&cameraFocalPoint=$cameraFocalPoint'
+                      '&dirLightIntensity=${_directlightIntensity.text}'
+                      '&globalLightIntensity=${_globallightIntensity.text}';
+                },
+                child: const Text("Save To Custom"),
+              ),
             ],
           ),
         ),
@@ -414,7 +442,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Past',
+            label: 'Create',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.accessibility_new),
@@ -432,10 +460,10 @@ class _MinecraftPageState extends State<MinecraftPage> {
       _selectedIndex = index;
     });
     switch (index) {
-      case 1:
+      case 0:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MinecraftCustomLook()),
+          MaterialPageRoute(builder: (context) => const MinecraftPage()),
         );
       case 2:
         Navigator.pushReplacement(
