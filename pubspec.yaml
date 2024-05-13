@@ -85,7 +85,32 @@ flutter:
   assets:
     - assets/lemon.png
     - assets/minecraftIcon.png
-  #   - images/a_dot_ham.jpeg
+    - assets/Valorant_Images/Ascendant_1_Rank.png
+    - assets/Valorant_Images/Ascendant_2_Rank.png
+    - assets/Valorant_Images/Ascendant_3_Rank.png
+    - assets/Valorant_Images/Bronze_1_Rank.png
+    - assets/Valorant_Images/Bronze_2_Rank.png
+    - assets/Valorant_Images/Bronze_3_Rank.png
+    - assets/Valorant_Images/Diamond_1_Rank.png
+    - assets/Valorant_Images/Diamond_2_Rank.png
+    - assets/Valorant_Images/Diamond_3_Rank.png
+    - assets/Valorant_Images/Gold_1_Rank.png
+    - assets/Valorant_Images/Gold_2_Rank.png
+    - assets/Valorant_Images/Gold_3_Rank.png
+    - assets/Valorant_Images/Immortal_1_Rank.png
+    - assets/Valorant_Images/Immortal_2_Rank.png
+    - assets/Valorant_Images/Immortal_3_Rank.png
+    - assets/Valorant_Images/Iron_1_Rank.png
+    - assets/Valorant_Images/Iron_2_Rank.png
+    - assets/Valorant_Images/Iron_3_Rank.png
+    - assets/Valorant_Images/Platinum_1_Rank.png
+    - assets/Valorant_Images/Platinum_2_Rank.png
+    - assets/Valorant_Images/Platinum_3_Rank.png
+    - assets/Valorant_Images/Radiant_Rank.png
+    - assets/Valorant_Images/Silver_1_Rank.png
+    - assets/Valorant_Images/Silver_2_Rank.png
+    - assets/Valorant_Images/Silver_3_Rank.png
+    - assets/Valorant_Images/Unranked.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

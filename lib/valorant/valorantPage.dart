@@ -51,6 +51,7 @@ class ValorantPageState extends State<ValorantPage> {
 
           if (player != null) {
             String agentIconUrl = player['assets']['agent']['small'];
+            String rankIconUrl = player['assets']['agent']['small'];
             Map<String, dynamic> playerStats = {
               'matchId': match['metadata']['matchid'],
               'kills': player['stats']['kills'],

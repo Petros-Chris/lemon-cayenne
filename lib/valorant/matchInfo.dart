@@ -42,9 +42,9 @@ class MatchInfo extends StatelessWidget {
   Widget buildMatchDetails(Map<String, dynamic> matchData) {
     return Column(
       children: [
-        Text('Map: ${match['map']}', style: TextStyle(fontSize: 16)),
-        Text('Mode: ${match['gameMode']}', style: TextStyle(fontSize: 16)),
-        Text('Score: ${match['score']}', style: TextStyle(fontSize: 16)),
+        Text('Map: ${match['map']}', style: TextStyle(fontSize: 20)),
+        Text('Mode: ${match['gameMode']}', style: TextStyle(fontSize: 20)),
+        Text('Score: ${match['score']}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -56,17 +56,27 @@ class MatchInfo extends StatelessWidget {
       itemCount: team.length,
       itemBuilder: (context, index) {
         var player = team[index];
+        String rankImagePath = getRankImagePath(player['currenttier_patched']);
         return Card(
           child: ListTile(
-            title: Text('${player['name']}#${player['tag']}'),
-            subtitle: Text(
-                'Agent: ${player['character']} - Rank: ${player['currenttier_patched']}'),
+            title: Text('${player['name']}#${player['tag']}' , style: TextStyle(fontWeight: FontWeight.bold),),
+            subtitle: Row(
+              children: [
+                Text("Agent: "),
+                Image.network(player['assets']['agent']['small'], // Agent icon
+                  width: 30,
+                  height: 30,),
+                Text("- Rank: "),
+                Image.asset(rankImagePath, width: 30, height: 30),
+              ],
+            ),
+
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('Kills: ${player['stats']['kills']}'),
-                Text('Deaths: ${player['stats']['deaths']}'),
-                Text('Assists: ${player['stats']['assists']}'),
+                Text('Kills: ${player['stats']['kills']}', style: TextStyle(fontSize: 12),),
+                Text('Deaths: ${player['stats']['deaths']}', style: TextStyle(fontSize: 12),),
+                Text('Assists: ${player['stats']['assists']}', style: TextStyle(fontSize: 12),),
               ],
             ),
           ),
@@ -74,4 +84,17 @@ class MatchInfo extends StatelessWidget {
       },
     );
   }
+}
+
+String getRankImagePath(String rank) {
+  // Handle the special case for "Radiant" rank
+  if (rank.toLowerCase() == 'radiant') {
+    return 'assets/Valorant_Images/Radiant_Rank.png'; // Ensure the file name is correct
+  }
+  else if(rank.toLowerCase() == 'unrated'){
+    return 'assets/Valorant_Images/Unranked.png';
+  }
+
+  // Replace spaces with underscores and append '.png' for other ranks
+  return 'assets/Valorant_Images/${rank.replaceAll(' ', '_')}_Rank.png';
 }
