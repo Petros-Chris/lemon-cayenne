@@ -5,7 +5,7 @@ import 'package:lemon_cayenne/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Theme/colorTheme.dart';
+import 'Theme/color_theme.dart';
 import 'const.dart';
 
 class CustomizePage extends StatefulWidget {
@@ -16,6 +16,30 @@ class CustomizePage extends StatefulWidget {
 }
 
 class _CustomizePageState extends State<CustomizePage> {
+  void _saveRenderView() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('render_view_val', renderViewVal);
+  }
+
+  void _saveRenderType() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('render_type_val', renderTypeVal);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    switch (isDarkMode) {
+      case true:
+        {
+          colorOptions = colorOptionsDark;
+          break;
+        }
+      case false:
+        colorOptions = colorOptionsLight;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,13 +95,34 @@ class _CustomizePageState extends State<CustomizePage> {
                   ),
                   DropdownButton<String>(
                     value: hjel,
-                    onChanged: (String? newValue) {
+                    onChanged: (String? newValue) async {
                       setState(() {
                         hjel = newValue!;
                         isDark = stringToInt[hjel]!;
                       });
-                      Provider.of<ThemeProvider>(context, listen: false)
+                      await Provider.of<ThemeProvider>(context, listen: false)
                           .toggleTheme();
+
+                      setState(
+                        () {
+                          switch (isDarkMode) {
+                            case true:
+                              {
+                                colorOptions = colorOptionsDark;
+                                colorOption = 'default';
+                                Provider.of<ColorProvider>(context,
+                                        listen: false)
+                                    .toggleColor();
+                                break;
+                              }
+                            case false:
+                              colorOptions = colorOptionsLight;
+                              colorOption = 'default';
+                              Provider.of<ColorProvider>(context, listen: false)
+                                  .toggleColor();
+                          }
+                        },
+                      );
                     },
                     items: stringToInt.keys.map((String value) {
                       return DropdownMenuItem<String>(
@@ -94,9 +139,10 @@ class _CustomizePageState extends State<CustomizePage> {
               ),
               const Row(
                 children: [
-                  Text("Minecraft",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text(
+                    "Minecraft",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               Row(
@@ -152,15 +198,5 @@ class _CustomizePageState extends State<CustomizePage> {
         ),
       ),
     );
-  }
-
-  void _saveRenderView() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('render_view_val', renderViewVal);
-  }
-
-  void _saveRenderType() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('render_type_val', renderTypeVal);
   }
 }

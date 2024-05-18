@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 late int isDark;
+late bool isDarkMode;
 late String hjel;
 final Map<int, String> intToString = {
   0: 'Amoled',
@@ -13,6 +14,16 @@ final Map<String, int> stringToInt = {
   'Dark': 2,
 };
 
+
+final inputColor = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [
+    Colors.yellow,
+    Colors.orange,
+  ],
+);
+
 final ThemeData amoledTheme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
@@ -20,10 +31,10 @@ final ThemeData amoledTheme = ThemeData(
     brightness: Brightness.dark,
     background: Colors.black,
   ),
-  drawerTheme: DrawerThemeData(
+  drawerTheme: const DrawerThemeData(
     backgroundColor: Colors.black,
   ),
-  snackBarTheme: SnackBarThemeData(
+  snackBarTheme: const SnackBarThemeData(
     backgroundColor: Colors.black,
     contentTextStyle: TextStyle(color: Colors.white),
   ),
@@ -34,4 +45,10 @@ final ThemeData amoledTheme = ThemeData(
 
 final ThemeData lightTheme = ThemeData();
 
-final ThemeData darkTheme = ThemeData.dark();
+final ThemeData darkTheme = ThemeData.dark().copyWith(
+  useMaterial3: true,
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: Color(0xFF3A3A3A),
+    contentTextStyle: TextStyle(color: Colors.white),
+  ),
+);

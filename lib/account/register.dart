@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
+
+import '../Theme/theme.dart';
 import 'hash.dart';
 import 'login.dart';
 
@@ -24,10 +26,10 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController _username = TextEditingController();
-  TextEditingController _password = TextEditingController();
-  TextEditingController _confirmPassword = TextEditingController();
-  bool _obsurceText = true;
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
+  bool _obscureText = true;
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
@@ -89,14 +91,8 @@ class _RegisterPageState extends State<RegisterPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.yellow,
-                      Colors.orange,
-                    ],
-                  ),
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -108,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   inputFormatters: [
                     // FilteringTextInputFormatter.allow(
                     //     RegExp(r'^[a-zA-Z0-9]+$')),
-                    FilteringTextInputFormatter.deny(RegExp(r'[^\w\d]')),
+                    FilteringTextInputFormatter.deny(RegExp(r'\W')),
                   ],
                   decoration: const InputDecoration(
                     labelText: ("Username"),
@@ -122,14 +118,8 @@ class _RegisterPageState extends State<RegisterPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.yellow,
-                      Color(0xF6F079FF),
-                    ],
-                  ),
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -145,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           .width - 126,
                       child: TextField(
                         controller: _password,
-                        obscureText: _obsurceText,
+                        obscureText: _obscureText,
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r'\s')),
                         ],
@@ -156,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          _obsurceText = !_obsurceText;
+                          _obscureText = !_obscureText;
                         });
                       },
                       child: const Icon(Icons.search),
@@ -170,14 +160,8 @@ class _RegisterPageState extends State<RegisterPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.yellow,
-                      Color(0xF6F079FF),
-                    ],
-                  ),
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -193,7 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           .width - 126,
                       child: TextField(
                         controller: _confirmPassword,
-                        obscureText: _obsurceText,
+                        obscureText: _obscureText,
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r'\s')),
                         ],
@@ -205,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          _obsurceText = !_obsurceText;
+                          _obscureText = !_obscureText;
                         });
                       },
                       child: const Icon(Icons.search),
@@ -214,7 +198,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
@@ -223,14 +207,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     .size
                     .width - 200,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.yellow,
-                      Colors.yellowAccent,
-                    ],
-                  ),
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,

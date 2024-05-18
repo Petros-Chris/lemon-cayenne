@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:lemon_cayenne/Theme/colorTheme.dart';
+import 'package:lemon_cayenne/Theme/color_theme.dart';
 import 'package:lemon_cayenne/account/hash.dart';
 import 'package:lemon_cayenne/account/register.dart';
 import 'package:lemon_cayenne/Theme/theme_provider.dart';
@@ -126,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 20,),
               IconButton(
                 onPressed: () {},
                 icon: Image.asset(
@@ -133,21 +134,14 @@ class _LoginPageState extends State<LoginPage> {
                   width: 160,
                 ),
               ),
-              // Text("Login", style: TextStyle(fontSize: 32),),
               const SizedBox(
                 height: 10,
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.yellow,
-                      Colors.orange,
-                    ],
-                  ),
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
+                  gradient: isDarkMode ? null : inputColor,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -173,14 +167,8 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.yellow,
-                      Color(0xF6F079FF),
-                    ],
-                  ),
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
+                  gradient: isDarkMode ? null : inputColor,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -213,20 +201,14 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 200,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.yellow,
-                      Colors.yellowAccent,
-                    ],
-                  ),
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -255,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               GestureDetector(

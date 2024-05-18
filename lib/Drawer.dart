@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/account/login.dart';
 import 'package:lemon_cayenne/home.dart';
+import 'Theme/theme.dart';
 import 'game/startGame.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';
@@ -16,17 +17,20 @@ class DrawerNav extends StatefulWidget {
 class _DrawerNavState extends State<DrawerNav> {
   @override
   Widget build(BuildContext context) {
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.yellow, Colors.orangeAccent],
-              ),
+            decoration: BoxDecoration(
+              gradient: isDarkMode ? LinearGradient(begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Color(0x831100A9),
+                  Color(0xFF251C1C),
+                ],
+              ) : inputColor,
             ),
             child: Column(
               children: [

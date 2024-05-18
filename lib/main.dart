@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Theme/colorTheme.dart';
+import 'Theme/color_theme.dart';
 import 'Theme/theme.dart';
 import 'account/login.dart';
 
@@ -32,7 +32,5 @@ Future<void> main() async {
       ),
     ],
   );
-
-  // await FlutterDownloader.initialize();
   runApp(const MyApp());
 }

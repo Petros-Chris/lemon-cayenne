@@ -88,10 +88,8 @@ class ValorantPageState extends State<ValorantPage> {
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: Text(
-          "Player Info", style: TextStyle(color: Colors.white),),
+          "Player Info"),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        iconTheme: IconThemeData(color: Colors.white),
 
       ),
       drawer: DrawerNav(),

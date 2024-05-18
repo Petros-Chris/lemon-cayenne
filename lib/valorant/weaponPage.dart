@@ -76,10 +76,8 @@ class WeaponPageState extends State<WeaponPage> {
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: Text(
-          "Weapon Info", style: TextStyle(color: Colors.white),),
+          "Weapon Info"),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-        iconTheme: IconThemeData(color: Colors.white),
 
       ),
       drawer: DrawerNav(),

@@ -67,7 +67,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
         hasTextLoaded = true;
         isLoadingFetch = false;
       });
-      custom(_name, renderTypeVal, renderViewVal);
+      custom(_name);
     } else {
       setState(() {
         failed = true;
@@ -78,10 +78,8 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
     }
   }
 
-  Future<void> custom(
+  Future<String> custom(
     String name,
-    String renderType,
-    String renderCrop,
   ) async {
     setState(() {
       isLoadingImage = true;
@@ -101,13 +99,15 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
 
       cameraFocalPoint = jsonEncode(jsonDataCamFocPo);
     });
-    final response = await http.get(Uri.parse(
-        'https://starlightskins.lunareclipse.studio/render/$renderType/$name/$renderCrop?'
+    url =
+        'https://starlightskins.lunareclipse.studio/render/$_renderTypeVal/$name/$_renderViewVal?'
         'isometric=$isometric&dropShadow=$dropShadow'
         '&renderScale=${_renderScale.text}'
         '&cameraPosition=$cameraPostion&cameraFocalPoint=$cameraFocalPoint'
         '&dirLightIntensity=${_directlightIntensity.text}'
-        '&globalLightIntensity=${_globallightIntensity.text}'));
+        '&globalLightIntensity=${_globallightIntensity.text}';
+
+    final response = await http.get(Uri.parse(url));
     //'&borderHighlight=true'
     //&borderHighlightRadius=20'
     //'&borderHighlightColor=$borderColor'
@@ -126,6 +126,12 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
         hasImageLoaded = false;
       });
     }
+    return 'https://starlightskins.lunareclipse.studio/render/$_renderTypeVal/$name/$_renderViewVal?'
+        'isometric=$isometric&dropShadow=$dropShadow'
+        '&renderScale=${_renderScale.text}'
+        '&cameraPosition=$cameraPostion&cameraFocalPoint=$cameraFocalPoint'
+        '&dirLightIntensity=${_directlightIntensity.text}'
+        '&globalLightIntensity=${_globallightIntensity.text}';
   }
 
   void _loadRenderType() async {
@@ -219,13 +225,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                             setState(() {
                               renderTypeVal = newValue!;
                               custom(
-                                _name,
-                                renderTypeVal,
-                                renderViewVal,
-                                // cameraPosition,
-                                // cameraFocalPoint,
-                                // cameraFOV,
-                                //isometric,
+                                _name
                               );
                             });
                           },
@@ -244,7 +244,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                           onChanged: (String? newValue) {
                             setState(() {
                               renderViewVal = newValue!;
-                              custom(_name, renderTypeVal, renderViewVal);
+                              custom(_name);
                             });
                           },
                           items: renderView.map((String value) {
@@ -266,7 +266,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                     onChanged: (value) {
                       setState(() {
                         isometric = value;
-                        custom(_name, renderTypeVal, renderViewVal);
+                        custom(_name);
                       });
                     },
                   ),
@@ -279,7 +279,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                     onChanged: (value) {
                       setState(() {
                         dropShadow = value;
-                        custom(_name, renderTypeVal, renderViewVal);
+                        custom(_name);
                       });
                     },
                   ),
@@ -419,15 +419,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                     )
                   : const SizedBox(),
               ElevatedButton(
-                onPressed: () {
-                  url = //Hardcoded, should change :>
-                      'https://starlightskins.lunareclipse.studio/render/$_renderTypeVal/$_name/$_renderViewVal?'
-                      'isometric=$isometric&dropShadow=$dropShadow'
-                      '&renderScale=${_renderScale.text}'
-                      '&cameraPosition=$cameraPostion&cameraFocalPoint=$cameraFocalPoint'
-                      '&dirLightIntensity=${_directlightIntensity.text}'
-                      '&globalLightIntensity=${_globallightIntensity.text}';
-                },
+                onPressed: () {},
                 child: const Text("Save To Custom"),
               ),
             ],
@@ -441,7 +433,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
             label: 'Current',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.plumbing_sharp),
             label: 'Create',
           ),
           BottomNavigationBarItem(
