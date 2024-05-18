@@ -7,7 +7,7 @@ import 'matchInfo.dart';
 import 'package:lemon_cayenne/valorant/weaponPage.dart';
 
 
-final String apiKey = 'Your_API_Key';
+final String apiKey = 'HDEV-6497b6fd-49e8-4e07-afcf-ac3beaaecb7d';
 final String baseUrl = 'https://api.henrikdev.xyz/valorant/v3';
 bool _isLoading = false;
 String _errorMessage = '';
@@ -34,7 +34,7 @@ class ValorantPageState extends State<ValorantPage> {
 
     Future<List<Map<String, dynamic>>> getMatches(String region, String name, String tag) async {
       var url = Uri.parse('$baseUrl/matches/$region/$name/$tag');
-      var response = await http.get(url, headers: {'X-API-Key': apiKey});
+      var response = await http.get(url, headers: {'Authorization': apiKey});
 
       if (response.statusCode == 200) {
         _errorMessage = '';
