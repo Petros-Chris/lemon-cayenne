@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lemon_cayenne/valorant/valorantPage.dart';
 import 'dart:convert';
-import '../Drawer.dart';
-import 'package:lemon_cayenne/Drawer.dart'; // Make sure this import path is correct based on your project structure
-import 'WeaponSkins.dart'; // Import the ValorantPage
+import 'package:lemon_cayenne/Drawer.dart';
+import 'WeaponSkins.dart';
 
 class WeaponPage extends StatefulWidget {
   @override
@@ -15,7 +14,7 @@ class _WeaponPageState extends State<WeaponPage> {
   String? selectedCategory;
   List<dynamic> items = [];
   bool isLoading = false;
-  int _selectedIndex = 1; // Default to WeaponPage
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -94,7 +93,7 @@ class _WeaponPageState extends State<WeaponPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Weapon Page')),
-      drawer: DrawerNav(), // Assuming DrawerNav is your Drawer widget
+      drawer: DrawerNav(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(
