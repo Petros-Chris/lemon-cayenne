@@ -143,15 +143,6 @@ class _MinecraftPageState extends State<MinecraftPage> {
     }
   }
 
-  // void openPhotosApp() async {
-  //   const urlw = 'content://com.android.providers.downloads.documents/all_downloads';
-  //   if (await canLaunch(urlw)) {
-  //     await launch(urlw);
-  //   } else {
-  //     print('Could not launch $urlw');
-  //   }
-  // }
-
   void openPhotosApp() {
     AndroidIntent intent = const AndroidIntent(
       action: 'android.intent.action.VIEW_DOWNLOADS',
@@ -172,7 +163,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: const Text(
-          "Search For Current Owner",
+          "Search By Username",
         ),
         centerTitle: true,
       ),
@@ -192,14 +183,22 @@ class _MinecraftPageState extends State<MinecraftPage> {
                     child: Row(
                       children: [
                         const Icon(Icons.search),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         SizedBox(
                           width: 200,
                           child: TextField(
                             controller: _search,
                             decoration: const InputDecoration(
-                                hintText: "Search For Username",
-                                border: UnderlineInputBorder(
-                                    borderSide: BorderSide.none)),
+                              hintText: "Username",
+                              border: UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
+                            ),
+                            onSubmitted: (value) async {
+                              FocusScope.of(context).unfocus();
+                              await fetchHuman(_search.text);
+                            },
                           ),
                         ),
                       ],
@@ -210,6 +209,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                   ),
                   ElevatedButton(
                       onPressed: () async {
+                        FocusScope.of(context).unfocus();
                         await fetchHuman(_search.text);
                       },
                       child: const Text("Search")),
@@ -221,11 +221,11 @@ class _MinecraftPageState extends State<MinecraftPage> {
                         const Text("Render Type"),
                         const Spacer(),
                         DropdownButton<String>(
+                          menuMaxHeight: 300,
                           value: renderTypeVal,
                           onChanged: (String? newValue) {
                             setState(() {
                               renderTypeVal = newValue!;
-
                               switch (renderTypeVal) {
                                 case 'mojavatar':
                                   {
@@ -360,7 +360,6 @@ class _MinecraftPageState extends State<MinecraftPage> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
-                                //body: 'Click here to go checkout the new file',
                               ),
                             );
                             openPhotosApp();
@@ -409,12 +408,12 @@ class _MinecraftPageState extends State<MinecraftPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
             label: 'Current',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Past',
+            icon: Icon(Icons.create),
+            label: 'Create',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.accessibility_new),

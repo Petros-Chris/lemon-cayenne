@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/account/login.dart';
 import 'package:lemon_cayenne/home.dart';
 import 'Theme/theme.dart';
-import 'game/startGame.dart';
+import 'game/main_menu.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';
 import 'minecraft/minecraftUser.dart';
@@ -117,7 +117,7 @@ class _DrawerNavState extends State<DrawerNav> {
             onTap: () {
               Navigator.pop(context);
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => BeforeGamingPage()));
+                  MaterialPageRoute(builder: (context) => GameMenu()));
             },
           ),
           const Divider(height: 0),

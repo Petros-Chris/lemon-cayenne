@@ -152,10 +152,34 @@ class _CustomizePageState extends State<CustomizePage> {
                     child: SizedBox(),
                   ),
                   DropdownButton<String>(
+                    menuMaxHeight: 300,
                     value: renderTypeVal,
                     onChanged: (String? newValue) {
                       setState(() {
                         renderTypeVal = newValue!;
+                        switch (renderTypeVal) {
+                          case 'mojavatar':
+                            {
+                              if (renderViewVal == 'face') {
+                                renderViewVal = 'bust';
+                              }
+
+                              renderView = ['full', 'bust'];
+                              break;
+                            }
+                          case 'head':
+                            {
+                              if (renderViewVal != 'full') {
+                                renderViewVal = 'full';
+                              }
+                              renderView = ['full'];
+                              break;
+                            }
+                          default:
+                            {
+                              renderView = ['full', 'bust', 'face'];
+                            }
+                        }
                         _saveRenderType();
                       });
                     },

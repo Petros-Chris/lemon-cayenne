@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lemon_cayenne/game/startGame.dart';
+import 'package:lemon_cayenne/game/main_menu.dart';
 import 'Drawer.dart';
+import 'Theme/theme.dart';
 import 'const.dart';
 import 'valorant/valorantPage.dart';
 
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: HomePage(),
     );
   }
@@ -30,66 +31,147 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
-        title: Text("The Lemon Project"),
+        title: const Text("The Lemon Project"),
         centerTitle: true,
       ),
-      drawer: DrawerNav(),
+      drawer: const DrawerNav(),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
           child: Column(
             children: [
               Text("Hello $username, Where Would You Like To Go?"),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                width: 300,
-                height: 50,
+              Container(
+                width: MediaQuery.of(context).size.width - 100,
+                height: MediaQuery.of(context).size.width - 320,
+                decoration: BoxDecoration(
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ValorantPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Valorant")),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ValorantPage(),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                    elevation: MaterialStateProperty.all(0),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    "sweat with no life",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                width: 300,
-                height: 50,
+              Container(
+                width: MediaQuery.of(context).size.width - 100,
+                height: MediaQuery.of(context).size.width - 320,
+                decoration: BoxDecoration(
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MinecraftPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Minecraft")),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MinecraftPage(),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                    elevation: MaterialStateProperty.all(0),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/minecraftIcon.png',
+                        width: 40,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        "Visit Minecraft",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                width: 300,
-                height: 50,
+              Container(
+                width: MediaQuery.of(context).size.width - 100,
+                height: MediaQuery.of(context).size.width - 320,
+                decoration: BoxDecoration(
+                  gradient: isDarkMode ? null : inputColor,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BeforeGamingPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Training Game")),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GameMenu(),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                    elevation: MaterialStateProperty.all(0),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    "Click The Square rawr",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
               ),
             ],
           ),

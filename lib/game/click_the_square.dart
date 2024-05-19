@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/const.dart';
 import 'dart:math';
 import 'dart:async';
-import 'package:lemon_cayenne/game/startGame.dart';
+import 'package:lemon_cayenne/game/main_menu.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,31 +11,58 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Game(),
+      home: ClickTheSquare(),
     );
   }
 }
 
-class Game extends StatefulWidget {
-  const Game({super.key});
+class ClickTheSquare extends StatefulWidget {
+  const ClickTheSquare({super.key});
 
   @override
-  State<Game> createState() => _GameState();
+  State<ClickTheSquare> createState() => _ClickTheSquareState();
 }
 
-class _GameState extends State<Game> {
+class _ClickTheSquareState extends State<ClickTheSquare> {
   int score = 0;
   Timer? time;
+  Timer? movementTime;
   int remainingSeconds = 10;
   double top = 100;
   double left = 100;
 
   void movement() {
     final random = Random();
-    setState(() {
-      score += 100;
-      top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
-      left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+      setState(() {
+        score += 100;
+        top = random.nextDouble() * (MediaQuery
+            .of(context)
+            .size
+            .height - 180);
+        left = random.nextDouble() * (MediaQuery
+            .of(context)
+            .size
+            .width - 100);
+      });
+  }
+
+  void startMovementTimer() {
+    movementTime?.cancel();
+    final random = Random();
+    double time = 0;
+    switch (difficulty) {
+      case 'Easy': time = 10 * 1000; break;
+      case 'Medium': time = 0.5 * 1000; break;
+      case 'Hard': time = 0.2 * 1000; break;
+      case 'Insane': time = 0.02 * 1000; break;
+      default: time = 10 * 1000;
+    }
+    final duration = Duration(milliseconds: time.toInt());
+    movementTime = Timer.periodic(duration, (timer) {
+      setState(() {
+        top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
+        left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+      });
     });
   }
 
@@ -51,6 +78,7 @@ class _GameState extends State<Game> {
           });
         } else {
           time?.cancel();
+          movementTime?.cancel();
           checkAndUpdateHighScore();
           _showAlertDialog(context);
         }
@@ -73,12 +101,28 @@ class _GameState extends State<Game> {
 
     if (querySnapshot.docs.isNotEmpty) {
       var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
-      highestScore = userDoc['Score'];
+      highestScore = 0;
+      switch (difficulty) {
+        case 'Easy': highestScore = userDoc['EasyScore']; break;
+        case 'Medium': highestScore = userDoc['MediumScore']; break;
+        case 'Hard': highestScore = userDoc['HardScore']; break;
+        case 'Insane': highestScore = userDoc['InsaneScore']; break;
+        default: highestScore = userDoc['EasyScore'];
+      }
+
     }
   }
 
   Future<void> updateUser(String id, int newScore) async {
-    await users.doc(id).update({'Score': newScore});
+    String diff = "";
+    switch (difficulty) {
+      case 'Easy': diff = "Easy"; break;
+      case 'Medium': diff = "Medium"; break;
+      case 'Hard': diff = "Hard"; break;
+      case 'Insane': diff = "Insane"; break;
+      default: diff = "Easy";
+    }
+    await users.doc(id).update({'${diff}Score': newScore});
   }
 
   void _showAlertDialog(BuildContext context) {
@@ -96,7 +140,7 @@ class _GameState extends State<Game> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const BeforeGamingPage()));
+                        builder: (context) => const GameMenu()));
               },
               child: const Text('Return'),
             ),
@@ -104,7 +148,7 @@ class _GameState extends State<Game> {
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const Game()));
+                    MaterialPageRoute(builder: (context) => const ClickTheSquare()));
               },
               child: const Text('Try Again'),
             ),
@@ -118,6 +162,7 @@ class _GameState extends State<Game> {
   void initState() {
     super.initState();
     startTimer();
+    startMovementTimer();
   }
 
   @override
@@ -132,7 +177,7 @@ class _GameState extends State<Game> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const BeforeGamingPage()));
+                        builder: (context) => const GameMenu()));
               },
               child: const Row(
                 children: [
@@ -155,7 +200,7 @@ class _GameState extends State<Game> {
             AnimatedPositioned(
               top: top,
               left: left,
-              duration: const Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 0),
               curve: Curves.easeInOut,
               child: Container(
                 width: 100,

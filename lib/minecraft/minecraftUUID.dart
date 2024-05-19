@@ -150,11 +150,11 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
             label: 'Current',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.create),
             label: 'Past',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility_new),
+            icon: Icon(Icons.accessible_forward),
             label: 'UUID',
           ),
         ],

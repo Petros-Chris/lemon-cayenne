@@ -15,7 +15,7 @@ final Map<String, int> stringToInt = {
 };
 
 
-final inputColor = LinearGradient(
+const inputColor = LinearGradient(
   begin: Alignment.centerLeft,
   end: Alignment.centerRight,
   colors: [
@@ -38,12 +38,14 @@ final ThemeData amoledTheme = ThemeData(
     backgroundColor: Colors.black,
     contentTextStyle: TextStyle(color: Colors.white),
   ),
-  textTheme: const TextTheme(
-    displayMedium: TextStyle(fontSize: 24),
-  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(foregroundColor: Colors.red)
+  )
 );
 
-final ThemeData lightTheme = ThemeData();
+final ThemeData lightTheme = ThemeData(
+  useMaterial3: true,
+);
 
 final ThemeData darkTheme = ThemeData.dark().copyWith(
   useMaterial3: true,

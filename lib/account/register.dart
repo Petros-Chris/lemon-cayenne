@@ -40,7 +40,10 @@ class _RegisterPageState extends State<RegisterPage> {
       'Username': _username.text,
       'Password': hashedPassword,
       'Salt': salt,
-      'Score': 0,
+      'EasyScore': 0,
+      'MediumScore': 0,
+      'HardScore': 0,
+      'InsaneScore': 0,
     }).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(
