@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var username = "";
 int highestScore = 0;
@@ -10,31 +10,68 @@ String url = "";
 String difficulty = "";
 var renderTypeVal = "default";
 final List<String> rendertype = [
-  'default',
-  'marching',
-  'walking',
+  'archer',
+  'bitzel',
+  'cheering',
+  'cowering',
+  'criss_cross',
   'crouching',
   'crossed',
-  'criss_cross',
-  'ultimate',
-  'isometric',
-  'cheering',
-  'relaxing',
-  'trudging',
-  'cowering',
-  'pointing',
-  'lunging',
+  'dead',
+  'default',
   'dungeons',
   'facepalm',
-  'sleeping',
-  'dead',
-  'archer',
+  'head',
+  'isometric',
   'kicking',
-  'reading',
-  'bitzel',
-  'pixel',
+  'lunging',
+  'marching',
   'mojavatar',
-  'head'
+  'pixel',
+  'pointing',
+  'reading',
+  'relaxing',
+  'sleeping',
+  'ultimate',
+  'trudging',
+  'walking',
 ];
 
+void saveRenderView() async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('render_view_val', renderViewVal);
+}
 
+void saveRenderType() async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('render_type_val', renderTypeVal);
+}
+
+void stopIncorrectViews() {
+  switch (renderTypeVal) {
+    case 'mojavatar':
+      {
+        if (renderViewVal == 'face') {
+          renderViewVal = 'bust';
+          saveRenderView();
+        }
+
+        renderView = ['full', 'bust'];
+
+        break;
+      }
+    case 'head':
+      {
+        if (renderViewVal != 'full') {
+          renderViewVal = 'full';
+          saveRenderView();
+        }
+        renderView = ['full'];
+        break;
+      }
+    default:
+      {
+        renderView = ['full', 'bust', 'face'];
+      }
+  }
+}

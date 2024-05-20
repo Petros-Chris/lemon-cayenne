@@ -1,65 +1,39 @@
 import 'dart:io';
+
 import 'package:android_intent/android_intent.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:lemon_cayenne/Drawer.dart';
-import 'package:lemon_cayenne/const.dart';
-import 'package:open_file/open_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'minecraftCreate.dart';
-import 'minecraftUUID.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
 
-class MinecraftPage extends StatefulWidget {
-  const MinecraftPage({super.key});
+import '../const.dart';
+import 'minecraft_user.dart';
+import 'minecraft_create.dart';
+
+class SeeUserByUUIDPage extends StatefulWidget {
+  const SeeUserByUUIDPage({super.key});
 
   @override
-  State<MinecraftPage> createState() => _MinecraftPageState();
+  State<SeeUserByUUIDPage> createState() => _SeeUserByUUIDPageState();
 }
 
-class _MinecraftPageState extends State<MinecraftPage> {
+class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
   final TextEditingController _search = TextEditingController();
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
   String _name = "";
   String _id = "";
   String _url = "";
   String _url2 = "";
-  var decodedResponse;
+  dynamic decodedResponse;
+  String errorMessage = "";
 
   bool failed = false;
   bool hasImageLoaded = false;
   bool hasTextLoaded = false;
   bool isLoadingFetch = false;
   bool isLoadingImage = false;
-
-  Future<void> fetchHuman(String userName) async {
-    setState(() {
-      isLoadingFetch = true;
-    });
-    final response = await http.get(
-        Uri.parse('https://api.mojang.com/users/profiles/minecraft/$userName'));
-
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-
-      setState(() {
-        _name = jsonResponse['name'];
-        _id = jsonResponse['id'];
-        hasTextLoaded = true;
-        isLoadingFetch = false;
-      });
-      await HeHeHEHAW(_name, renderTypeVal, renderViewVal);
-    } else {
-      setState(() {
-        failed = true;
-        hasTextLoaded = false;
-        hasImageLoaded = false;
-        isLoadingFetch = false;
-      });
-    }
-  }
 
   void _loadRenderType() async {
     final prefs = await SharedPreferences.getInstance();
@@ -75,7 +49,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
     });
   }
 
-  Future<void> HeHeHEHAW(
+  Future<void> generatePicture(
       String name, String renderType, String renderCrop) async {
     setState(() {
       isLoadingImage = true;
@@ -98,33 +72,22 @@ class _MinecraftPageState extends State<MinecraftPage> {
     }
   }
 
-  Future<void> loadCustomCreation() async {
+  Future<void> getMinecraftProfile(String uuid) async {
     setState(() {
-      isLoadingImage = true;
+      isLoadingFetch = true;
     });
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      setState(() {
-        _url = response.request!.url.toString();
-        isLoadingImage = false;
-        hasImageLoaded = true;
-        failed = false;
-      });
-    } else {
-      setState(() {
-        failed = true;
-        isLoadingImage = false;
-        hasImageLoaded = false;
-      });
-    }
-  }
-
-  Future<void> getMinecraftProfile(String userId) async {
-    var url = Uri.parse(
-        'https://sessionserver.mojang.com/session/minecraft/profile/$userId');
-    var response = await http.get(url);
+    final response = await http.get(Uri.parse(
+        'https://sessionserver.mojang.com/session/minecraft/profile/$uuid'));
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
+
+      setState(() {
+        _name = jsonResponse['name'];
+        _id = jsonResponse['id'];
+        hasTextLoaded = true;
+        isLoadingFetch = false;
+      });
+      await generatePicture(_name, renderTypeVal, renderViewVal);
 
       if (jsonResponse.containsKey('properties') &&
           jsonResponse['properties'].isNotEmpty) {
@@ -135,11 +98,15 @@ class _MinecraftPageState extends State<MinecraftPage> {
         setState(() {
           _url2 = decodedResponse['textures']['SKIN']['url'];
         });
-      } else {
-        print("No properties found or properties array is empty.");
       }
     } else {
-      print("Failed to retrieve user profile.");
+      setState(() {
+        failed = true;
+        hasTextLoaded = false;
+        hasImageLoaded = false;
+        isLoadingFetch = false;
+        errorMessage = response.reasonPhrase!;
+      });
     }
   }
 
@@ -163,7 +130,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: const Text(
-          "Search By Username",
+          "Search By UUID",
         ),
         centerTitle: true,
       ),
@@ -191,13 +158,13 @@ class _MinecraftPageState extends State<MinecraftPage> {
                           child: TextField(
                             controller: _search,
                             decoration: const InputDecoration(
-                              hintText: "Username",
+                              hintText: "Universally Unique Identifier",
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide.none),
                             ),
                             onSubmitted: (value) async {
                               FocusScope.of(context).unfocus();
-                              await fetchHuman(_search.text);
+                              await getMinecraftProfile(_search.text);
                             },
                           ),
                         ),
@@ -210,7 +177,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                   ElevatedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        await fetchHuman(_search.text);
+                        await getMinecraftProfile(_search.text);
                       },
                       child: const Text("Search")),
                 ],
@@ -234,7 +201,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                                     }
 
                                     renderView = ['full', 'bust'];
-                                    HeHeHEHAW(
+                                    generatePicture(
                                         _name, renderTypeVal, renderViewVal);
                                     break;
                                   }
@@ -244,18 +211,14 @@ class _MinecraftPageState extends State<MinecraftPage> {
                                       renderViewVal = 'full';
                                     }
                                     renderView = ['full'];
-                                    HeHeHEHAW(
+                                    generatePicture(
                                         _name, renderTypeVal, renderViewVal);
                                     break;
-                                  }
-                                case 'custom':
-                                  {
-                                    loadCustomCreation();
                                   }
                                 default:
                                   {
                                     renderView = ['full', 'bust', 'face'];
-                                    HeHeHEHAW(
+                                    generatePicture(
                                         _name, renderTypeVal, renderViewVal);
                                   }
                               }
@@ -276,7 +239,8 @@ class _MinecraftPageState extends State<MinecraftPage> {
                           onChanged: (String? newValue) {
                             setState(() {
                               renderViewVal = newValue!;
-                              HeHeHEHAW(_name, renderTypeVal, renderViewVal);
+                              generatePicture(
+                                  _name, renderTypeVal, renderViewVal);
                             });
                           },
                           items: renderView.map((String value) {
@@ -298,14 +262,14 @@ class _MinecraftPageState extends State<MinecraftPage> {
                               left: 20, right: 20, top: 20),
                           child: Row(
                             children: [
-                              Text(
+                              SelectableText(
                                 _name,
                                 style: const TextStyle(fontSize: 24),
                               ),
                               const Expanded(child: SizedBox()),
                               SizedBox(
                                 width: 150,
-                                child: Text(
+                                child: SelectableText(
                                   _id,
                                   style: const TextStyle(fontSize: 14),
                                   //overflow: TextOverflow.ellipsis,
@@ -324,9 +288,10 @@ class _MinecraftPageState extends State<MinecraftPage> {
                           ),
                       ],
                     )
-                  : const Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                      child: Text("Username doesn't exist"),
+                  : Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20, top: 20),
+                      child: Text("Something Went Wrong $errorMessage"),
                     ),
               const SizedBox(
                 height: 20,
@@ -346,7 +311,6 @@ class _MinecraftPageState extends State<MinecraftPage> {
                             ],
                           ),
                           onTap: () async {
-                            await getMinecraftProfile(_id);
                             String timeStamp =
                                 "${DateTime.now().day}${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}";
                             http.Response response =
@@ -392,7 +356,6 @@ class _MinecraftPageState extends State<MinecraftPage> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
-                                //body: 'Click here to go checkout the new file',
                               ),
                             );
                             openPhotosApp();
@@ -408,15 +371,15 @@ class _MinecraftPageState extends State<MinecraftPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
+            icon: Icon(Icons.person),
             label: 'Current',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.create),
-            label: 'Create',
+            label: 'Past',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility_new),
+            icon: Icon(Icons.accessible_forward),
             label: 'UUID',
           ),
         ],
@@ -431,15 +394,15 @@ class _MinecraftPageState extends State<MinecraftPage> {
       _selectedIndex = index;
     });
     switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MinecraftPage()),
+        );
       case 1:
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MinecraftCustomLook()),
-        );
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const SeeUserByUUIDPage()),
         );
     }
   }

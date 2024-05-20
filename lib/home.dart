@@ -5,7 +5,7 @@ import 'Theme/theme.dart';
 import 'const.dart';
 import 'valorant/valorantPage.dart';
 
-import 'minecraft/minecraftUser.dart';
+import 'minecraft/minecraft_user.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,10 +26,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var boxShadow = BoxShadow(
+    color: Colors.black.withOpacity(0.5),
+    spreadRadius: 5,
+    blurRadius: 7,
+    offset: Offset(0, 3),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
+      drawerEdgeDragWidth: MediaQuery
+          .of(context)
+          .size
+          .width,
       appBar: AppBar(
         title: const Text("The Lemon Project"),
         centerTitle: true,
@@ -45,9 +55,18 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               Container(
-                width: MediaQuery.of(context).size.width - 100,
-                height: MediaQuery.of(context).size.width - 320,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 100,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 330,
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    boxShadow
+                  ],
                   gradient: isDarkMode ? null : inputColor,
                   color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
@@ -67,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
+                    MaterialStateProperty.all(Colors.transparent),
                     elevation: MaterialStateProperty.all(0),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -85,9 +104,18 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               Container(
-                width: MediaQuery.of(context).size.width - 100,
-                height: MediaQuery.of(context).size.width - 320,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 100,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 330,
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    boxShadow
+                  ],
                   gradient: isDarkMode ? null : inputColor,
                   color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
@@ -107,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
+                    MaterialStateProperty.all(Colors.transparent),
                     elevation: MaterialStateProperty.all(0),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -137,9 +165,18 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               Container(
-                width: MediaQuery.of(context).size.width - 100,
-                height: MediaQuery.of(context).size.width - 320,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 100,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 330,
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    boxShadow
+                  ],
                   gradient: isDarkMode ? null : inputColor,
                   color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
@@ -159,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
+                    MaterialStateProperty.all(Colors.transparent),
                     elevation: MaterialStateProperty.all(0),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(

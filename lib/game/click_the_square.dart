@@ -30,20 +30,22 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
   int remainingSeconds = 10;
   double top = 100;
   double left = 100;
+  double oldTop = 0;
+  double oldLeft = 0;
 
   void movement() {
     final random = Random();
-      setState(() {
-        score += 100;
-        top = random.nextDouble() * (MediaQuery
-            .of(context)
-            .size
-            .height - 180);
-        left = random.nextDouble() * (MediaQuery
-            .of(context)
-            .size
-            .width - 100);
-      });
+    setState(() {
+      score += 100;
+      top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
+      left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+      while ((left - oldLeft).abs() < 100 || (top - oldTop).abs() < 100) {
+        left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+        top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
+      }
+      oldLeft = left;
+      oldTop = top;
+    });
   }
 
   void startMovementTimer() {
@@ -51,17 +53,34 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
     final random = Random();
     double time = 0;
     switch (difficulty) {
-      case 'Easy': time = 10 * 1000; break;
-      case 'Medium': time = 0.5 * 1000; break;
-      case 'Hard': time = 0.2 * 1000; break;
-      case 'Insane': time = 0.02 * 1000; break;
-      default: time = 10 * 1000;
+      case 'Easy':
+        time = 10 * 1000;
+        break;
+      case 'Medium':
+        time = 0.5 * 1000;
+        break;
+      case 'Hard':
+        time = 0.2 * 1000;
+        break;
+      case 'Insane':
+        time = 0.02 * 1000;
+        break;
+      default:
+        time = 10 * 1000;
     }
     final duration = Duration(milliseconds: time.toInt());
     movementTime = Timer.periodic(duration, (timer) {
       setState(() {
         top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
         left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+        while ((left - oldLeft).abs() < 100 || (top - oldTop).abs() < 100) {
+          left =
+              random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+          top =
+              random.nextDouble() * (MediaQuery.of(context).size.height - 180);
+        }
+        oldLeft = left;
+        oldTop = top;
       });
     });
   }
@@ -103,24 +122,41 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
       var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
       highestScore = 0;
       switch (difficulty) {
-        case 'Easy': highestScore = userDoc['EasyScore']; break;
-        case 'Medium': highestScore = userDoc['MediumScore']; break;
-        case 'Hard': highestScore = userDoc['HardScore']; break;
-        case 'Insane': highestScore = userDoc['InsaneScore']; break;
-        default: highestScore = userDoc['EasyScore'];
+        case 'Easy':
+          highestScore = userDoc['EasyScore'];
+          break;
+        case 'Medium':
+          highestScore = userDoc['MediumScore'];
+          break;
+        case 'Hard':
+          highestScore = userDoc['HardScore'];
+          break;
+        case 'Insane':
+          highestScore = userDoc['InsaneScore'];
+          break;
+        default:
+          highestScore = userDoc['EasyScore'];
       }
-
     }
   }
 
   Future<void> updateUser(String id, int newScore) async {
     String diff = "";
     switch (difficulty) {
-      case 'Easy': diff = "Easy"; break;
-      case 'Medium': diff = "Medium"; break;
-      case 'Hard': diff = "Hard"; break;
-      case 'Insane': diff = "Insane"; break;
-      default: diff = "Easy";
+      case 'Easy':
+        diff = "Easy";
+        break;
+      case 'Medium':
+        diff = "Medium";
+        break;
+      case 'Hard':
+        diff = "Hard";
+        break;
+      case 'Insane':
+        diff = "Insane";
+        break;
+      default:
+        diff = "Easy";
     }
     await users.doc(id).update({'${diff}Score': newScore});
   }
@@ -137,18 +173,18 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const GameMenu()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const GameMenu()));
               },
               child: const Text('Return'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const ClickTheSquare()));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ClickTheSquare()));
               },
               child: const Text('Try Again'),
             ),
@@ -174,10 +210,8 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
             GestureDetector(
               onTap: () {
                 time?.cancel();
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const GameMenu()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const GameMenu()));
               },
               child: const Row(
                 children: [
@@ -198,8 +232,8 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
         child: Stack(
           children: [
             AnimatedPositioned(
-              top: top,
-              left: left,
+              top: oldTop,
+              left: oldLeft,
               duration: const Duration(milliseconds: 0),
               curve: Curves.easeInOut,
               child: Container(

@@ -5,7 +5,7 @@ import 'Theme/theme.dart';
 import 'game/main_menu.dart';
 import 'settings.dart';
 import 'valorant/valorantPage.dart';
-import 'minecraft/minecraftUser.dart';
+import 'minecraft/minecraft_user.dart';
 
 class DrawerNav extends StatefulWidget {
   const DrawerNav({super.key});

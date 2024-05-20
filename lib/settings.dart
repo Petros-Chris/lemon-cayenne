@@ -16,16 +16,6 @@ class CustomizePage extends StatefulWidget {
 }
 
 class _CustomizePageState extends State<CustomizePage> {
-  void _saveRenderView() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('render_view_val', renderViewVal);
-  }
-
-  void _saveRenderType() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('render_type_val', renderTypeVal);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -38,6 +28,7 @@ class _CustomizePageState extends State<CustomizePage> {
       case false:
         colorOptions = colorOptionsLight;
     }
+    stopIncorrectViews();
   }
 
   @override
@@ -157,30 +148,8 @@ class _CustomizePageState extends State<CustomizePage> {
                     onChanged: (String? newValue) {
                       setState(() {
                         renderTypeVal = newValue!;
-                        switch (renderTypeVal) {
-                          case 'mojavatar':
-                            {
-                              if (renderViewVal == 'face') {
-                                renderViewVal = 'bust';
-                              }
-
-                              renderView = ['full', 'bust'];
-                              break;
-                            }
-                          case 'head':
-                            {
-                              if (renderViewVal != 'full') {
-                                renderViewVal = 'full';
-                              }
-                              renderView = ['full'];
-                              break;
-                            }
-                          default:
-                            {
-                              renderView = ['full', 'bust', 'face'];
-                            }
-                        }
-                        _saveRenderType();
+                        stopIncorrectViews();
+                        saveRenderType();
                       });
                     },
                     items: rendertype.map((String value) {
@@ -204,7 +173,7 @@ class _CustomizePageState extends State<CustomizePage> {
                     onChanged: (String? newValue) {
                       setState(() {
                         renderViewVal = newValue!;
-                        _saveRenderView();
+                        saveRenderView();
                       });
                     },
                     items: renderView.map((String value) {

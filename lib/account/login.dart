@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
             content: Center(
               child: Text("Login Successful!"),
             ),
-            duration: Duration(seconds: 2),
+            duration: Duration(seconds: 1),
           ),
         );
         username = _username.text;
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
             content: Center(
               child: Text("Your Username Or Password Is Incorrect"),
             ),
-            duration: Duration(seconds: 2),
+            duration: Duration(seconds: 1),
           ),
         );
       }
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
           content: Center(
             child: Text("Your Username Or Password Is Incdforrect"),
           ),
-          duration: Duration(seconds: 2),
+          duration: Duration(seconds: 1),
         ),
       );
     }
@@ -126,7 +126,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               IconButton(
                 onPressed: () {},
                 icon: Image.asset(
@@ -187,6 +189,12 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                         decoration: const InputDecoration(
                             labelText: ("Password"), border: InputBorder.none),
+                        onSubmitted: (value) async {
+                          FocusScope.of(context).unfocus();
+                          await viewUser();
+                          _username.clear();
+                          _password.clear();
+                        },
                       ),
                     ),
                     GestureDetector(
@@ -200,7 +208,6 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-
               const SizedBox(
                 height: 20,
               ),
@@ -208,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: MediaQuery.of(context).size.width - 200,
                 decoration: BoxDecoration(
                   gradient: isDarkMode ? null : inputColor,
-                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -217,6 +224,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
+                    FocusScope.of(context).unfocus();
                     await viewUser();
                     _username.clear();
                     _password.clear();

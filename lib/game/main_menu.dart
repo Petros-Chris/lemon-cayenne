@@ -92,7 +92,7 @@ class _GameMenuState extends State<GameMenu> {
             const SizedBox(
               height: 150,
             ),
-            Text("Difficulty"),
+            const Text("Difficulty"),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -100,22 +100,22 @@ class _GameMenuState extends State<GameMenu> {
                   setState(() {
                     difficulty = "Easy";
                   });
-                }, child: Text("Easy")),
+                }, child: const Text("Easy")),
                 ElevatedButton(onPressed: () {
                   setState(() {
                     difficulty = "Medium";
                   });
-                }, child: Text("Medium")),
+                }, child: const Text("Medium")),
                 ElevatedButton(onPressed: () {
                   setState(() {
                     difficulty = "Hard";
                   });
-                }, child: Text("Hard")),
+                }, child: const Text("Hard")),
                 ElevatedButton(onPressed: () {
                   setState(() {
                     difficulty = "Insane";
                   });
-                }, child: Text("Insane")),
+                }, child: const Text("Insane")),
               ],
             )
           ],
