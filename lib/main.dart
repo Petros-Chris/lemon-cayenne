@@ -20,7 +20,7 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   AwesomeNotifications().initialize(
-    null,
+    'resource://drawable/res_app_icon',
     [
       NotificationChannel(
         ledColor: Colors.pink,

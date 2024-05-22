@@ -4,7 +4,7 @@ import 'package:android_intent/android_intent.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -324,6 +324,7 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
+                                icon: 'resource://drawable/lemon',
                               ),
                             );
                             openPhotosApp();
@@ -356,6 +357,7 @@ class _SeeUserByUUIDPageState extends State<SeeUserByUUIDPage> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
+                                icon: 'resource://drawable/lemon',
                               ),
                             );
                             openPhotosApp();

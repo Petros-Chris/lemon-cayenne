@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/drawer.dart';
 import 'package:lemon_cayenne/const.dart';
 import 'package:lemon_cayenne/game/click_the_square.dart';
 
@@ -21,7 +21,7 @@ class _GameMenuState extends State<GameMenu> {
 
   Future<void> viewUser() async {
     QuerySnapshot querySnapshot =
-    await users.where('Username', isEqualTo: username).get();
+        await users.where('Username', isEqualTo: username).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       var userDoc = querySnapshot.docs.first.data() as Map<String, dynamic>;
@@ -91,14 +91,19 @@ class _GameMenuState extends State<GameMenu> {
               width: 200,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => const ClickTheSquare()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ClickTheSquare()));
                 },
                 child: const Text("Play"),
               ),
             ),
             const SizedBox(height: 40),
-            const Text("Difficulty", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+            const Text(
+              "Difficulty",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -113,11 +118,11 @@ class _GameMenuState extends State<GameMenu> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        shape: RoundedRectangleBorder(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
-                        side: BorderSide(color: Colors.grey, width: 2.0),
+                        side: const BorderSide(color: Colors.grey, width: 2.0),
                       ),
                       child: const Text("Easy"),
                     ),
@@ -133,11 +138,11 @@ class _GameMenuState extends State<GameMenu> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        shape: RoundedRectangleBorder(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
-                        side: BorderSide(color: Colors.grey, width: 2.0),
+                        side: const BorderSide(color: Colors.grey, width: 2.0),
                       ),
                       child: const Text("Medium"),
                     ),
@@ -158,11 +163,11 @@ class _GameMenuState extends State<GameMenu> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        shape: RoundedRectangleBorder(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
-                        side: BorderSide(color: Colors.grey, width: 2.0),
+                        side: const BorderSide(color: Colors.grey, width: 2.0),
                       ),
                       child: const Text("Hard"),
                     ),
@@ -178,11 +183,11 @@ class _GameMenuState extends State<GameMenu> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        shape: RoundedRectangleBorder(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
-                        side: BorderSide(color: Colors.grey, width: 2.0),
+                        side: const BorderSide(color: Colors.grey, width: 2.0),
                       ),
                       child: const Text("Insane"),
                     ),

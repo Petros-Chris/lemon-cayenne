@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lemon_cayenne/game/main_menu.dart';
-import 'Drawer.dart';
+import 'drawer.dart';
 import 'Theme/theme.dart';
 import 'const.dart';
-import 'valorant/valorantPage.dart';
+import 'valorant/valorant_page.dart';
 import 'minecraft/minecraft_user.dart';
 
 class MyApp extends StatelessWidget {
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     color: Colors.black.withOpacity(0.5),
     spreadRadius: 5,
     blurRadius: 7,
-    offset: Offset(0, 3),
+    offset: const Offset(0, 3),
   );
 
   @override
@@ -41,14 +41,15 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       drawer: const DrawerNav(),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
           child: Column(
             children: [
               Text(
                 "Hello $username, Where Would You Like To Go?",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -57,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                 'assets/Valorant.png',
                 "Valorant Info",
                 const ValorantPage(),
-                120, // Icon size
+                120,
               ),
               const SizedBox(height: 20),
               buildNavigationButton(
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                 'assets/minecraftIcon.png',
                 "Minecraft Skin Viewer",
                 const MinecraftPage(),
-                80, // Icon size
+                80,
               ),
               const SizedBox(height: 20),
               buildNavigationButton(
@@ -73,7 +74,10 @@ class _HomePageState extends State<HomePage> {
                 'assets/aim.png',
                 "Aim Game",
                 const GameMenu(),
-                120, // Icon size
+                120,
+              ),
+              const SizedBox(
+                height: 20,
               ),
             ],
           ),
@@ -82,7 +86,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildNavigationButton(BuildContext context, String assetPath, String title, Widget page, double iconSize) {
+  Widget buildNavigationButton(BuildContext context, String assetPath,
+      String title, Widget page, double iconSize) {
     return Container(
       width: MediaQuery.of(context).size.width - 30,
       height: MediaQuery.of(context).size.height - 610,

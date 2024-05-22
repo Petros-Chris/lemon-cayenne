@@ -4,7 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/drawer.dart';
 import 'package:lemon_cayenne/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'minecraft_create.dart';
@@ -246,7 +246,8 @@ class _MinecraftPageState extends State<MinecraftPage> {
                           onChanged: (String? newValue) {
                             setState(() {
                               renderViewVal = newValue!;
-                              generatePicture(_name, renderTypeVal, renderViewVal);
+                              generatePicture(
+                                  _name, renderTypeVal, renderViewVal);
                             });
                           },
                           items: renderView.map((String value) {
@@ -331,6 +332,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
+                                icon: 'resource://drawable/lemon',
                               ),
                             );
                             openPhotosApp();
@@ -363,6 +365,7 @@ class _MinecraftPageState extends State<MinecraftPage> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
+                                icon: 'resource://drawable/lemon',
                               ),
                             );
                             openPhotosApp();

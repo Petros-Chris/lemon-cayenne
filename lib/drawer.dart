@@ -4,7 +4,7 @@ import 'package:lemon_cayenne/home.dart';
 import 'Theme/theme.dart';
 import 'game/main_menu.dart';
 import 'settings.dart';
-import 'valorant/valorantPage.dart';
+import 'valorant/valorant_page.dart';
 import 'minecraft/minecraft_user.dart';
 
 class DrawerNav extends StatefulWidget {
@@ -17,20 +17,22 @@ class DrawerNav extends StatefulWidget {
 class _DrawerNavState extends State<DrawerNav> {
   @override
   Widget build(BuildContext context) {
-
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              gradient: isDarkMode ? LinearGradient(begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Color(0x831100A9),
-                  Color(0xFF251C1C),
-                ],
-              ) : inputColor,
+              gradient: isDarkMode
+                  ? const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Color(0x831100A9),
+                        Color(0xFF251C1C),
+                      ],
+                    )
+                  : inputColor,
             ),
             child: Column(
               children: [
@@ -70,7 +72,10 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
           ),
           ListTile(
-            leading: Image.asset('assets/Valorant.png', width: 25,),
+            leading: Image.asset(
+              'assets/Valorant.png',
+              width: 25,
+            ),
             title: const Row(
               children: [
                 Text('Valorant Info'),
@@ -88,7 +93,10 @@ class _DrawerNavState extends State<DrawerNav> {
           ),
           const Divider(height: 0),
           ListTile(
-            leading: Image.asset('assets/minecraftIcon.png', width: 25,),
+            leading: Image.asset(
+              'assets/minecraftIcon.png',
+              width: 25,
+            ),
             title: const Row(
               children: [
                 Text('Minecraft Api'),
@@ -106,7 +114,10 @@ class _DrawerNavState extends State<DrawerNav> {
           ),
           const Divider(height: 0),
           ListTile(
-            leading: Image.asset('assets/aim.png', width: 25,),
+            leading: Image.asset(
+              'assets/aim.png',
+              width: 25,
+            ),
             title: const Row(
               children: [
                 Text('Aim Game'),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
-
 import '../Theme/theme.dart';
 import 'hash.dart';
 import 'login.dart';
@@ -95,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
                   gradient: isDarkMode ? null : inputColor,
-                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -122,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
                   gradient: isDarkMode ? null : inputColor,
-                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -132,10 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Row(
                   children: [
                     SizedBox(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width - 126,
+                      width: MediaQuery.of(context).size.width - 126,
                       child: TextField(
                         controller: _password,
                         obscureText: _obscureText,
@@ -164,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 decoration: BoxDecoration(
                   gradient: isDarkMode ? null : inputColor,
-                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -174,10 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Row(
                   children: [
                     SizedBox(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width - 126,
+                      width: MediaQuery.of(context).size.width - 126,
                       child: TextField(
                         controller: _confirmPassword,
                         obscureText: _obscureText,
@@ -205,13 +198,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 20,
               ),
               Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width - 200,
+                width: MediaQuery.of(context).size.width - 200,
                 decoration: BoxDecoration(
                   gradient: isDarkMode ? null : inputColor,
-                  color: isDarkMode ?  const Color(0xFF3A3A3A) : null,
+                  color: isDarkMode ? const Color(0xFF3A3A3A) : null,
                   border: Border.all(
                     color: Colors.black,
                     width: 1.0,
@@ -238,7 +228,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                    MaterialStateProperty.all(Colors.transparent),
+                        MaterialStateProperty.all(Colors.transparent),
                     elevation: MaterialStateProperty.all(0),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(

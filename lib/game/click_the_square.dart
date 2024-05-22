@@ -34,7 +34,7 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
   double oldLeft = 0;
 
   void movement() {
-startMovementTimer();
+    startMovementTimer();
     final random = Random();
     setState(() {
       score += 100;
@@ -46,8 +46,6 @@ startMovementTimer();
       }
       oldLeft = left;
       oldTop = top;
-
-
     });
   }
 
@@ -89,7 +87,6 @@ startMovementTimer();
   }
 
   void startTimer() {
-
     time?.cancel();
 
     time = Timer.periodic(
@@ -202,7 +199,12 @@ startMovementTimer();
   void initState() {
     super.initState();
     startTimer();
-    startMovementTimer();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    movement();
   }
 
   @override

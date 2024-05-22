@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/drawer.dart';
 import 'package:lemon_cayenne/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'minecraft_uuid.dart';
@@ -152,9 +152,6 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
         '&globalLightIntensity=${_globalLightIntensity.text}';
 
     final response = await http.get(Uri.parse(url));
-    //'&borderHighlight=true'
-    //&borderHighlightRadius=20'
-    //'&borderHighlightColor=$borderColor'
 
     if (response.statusCode == 200) {
       setState(() {
@@ -342,7 +339,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                                 child: TextField(
                                   controller: _xCamPos,
                                   decoration: const InputDecoration(
-                                    labelText: "x for camera position",
+                                    labelText: "X Camera Position",
                                   ),
                                   keyboardType: TextInputType.number,
                                   inputFormatters: <TextInputFormatter>[
@@ -359,7 +356,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                                 child: TextField(
                                   controller: _yCamPos,
                                   decoration: const InputDecoration(
-                                    labelText: "y for camera position",
+                                    labelText: "Y Camera Position",
                                   ),
                                   keyboardType: TextInputType.number,
                                   inputFormatters: <TextInputFormatter>[
@@ -376,7 +373,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                                 child: TextField(
                                   controller: _zCamPos,
                                   decoration: const InputDecoration(
-                                    labelText: "z for camera position",
+                                    labelText: "z Camera Position",
                                   ),
                                   keyboardType: TextInputType.number,
                                   inputFormatters: <TextInputFormatter>[
@@ -464,8 +461,6 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                                   inputFormatters: <TextInputFormatter>[
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^-?\d*$')),
-                                    rangeTextInputFormatter(
-                                        -99999999999, 999999999999),
                                   ],
                                   onSubmitted: (value) async {
                                     FocusScope.of(context).unfocus();
@@ -483,8 +478,6 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                                   inputFormatters: <TextInputFormatter>[
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'^-?\d*$')),
-                                    rangeTextInputFormatter(
-                                        -99999999999, 999999999999),
                                   ],
                                   onSubmitted: (value) async {
                                     FocusScope.of(context).unfocus();
@@ -524,17 +517,16 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                               left: 20, right: 20, top: 20),
                           child: Row(
                             children: [
-                              Text(
+                              SelectableText(
                                 _name,
                                 style: const TextStyle(fontSize: 24),
                               ),
                               const Expanded(child: SizedBox()),
                               SizedBox(
                                 width: 150,
-                                child: Text(
+                                child: SelectableText(
                                   _id,
                                   style: const TextStyle(fontSize: 14),
-                                  //overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -602,7 +594,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
-                                bigPicture: 'assets://assets/lemon',
+                                icon: 'resource://drawable/lemon',
                               ),
                             );
                             openPhotosApp();

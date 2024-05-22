@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/drawer.dart';
 import 'dart:convert';
-import 'matchInfo.dart';
-import 'package:lemon_cayenne/valorant/weaponPage.dart';
+import '../Theme/theme.dart';
+import 'match_info.dart';
+import 'package:lemon_cayenne/valorant/weapon_page.dart';
 
-final String apiKey = 'HDEV-6497b6fd-49e8-4e07-afcf-ac3beaaecb7d';
-final String baseUrl = 'https://api.henrikdev.xyz/valorant/v3';
+const String apiKey = 'HDEV-6497b6fd-49e8-4e07-afcf-ac3beaaecb7d';
+const String baseUrl = 'https://api.henrikdev.xyz/valorant/v3';
 bool _isLoading = false;
 String _errorMessage = '';
 
@@ -48,7 +49,6 @@ class ValorantPageState extends State<ValorantPage> {
 
           if (player != null) {
             String agentIconUrl = player['assets']['agent']['small'];
-            String rankIconUrl = player['assets']['agent']['small'];
             Map<String, dynamic> playerStats = {
               'matchId': match['metadata']['matchid'],
               'kills': player['stats']['kills'],
@@ -73,7 +73,7 @@ class ValorantPageState extends State<ValorantPage> {
         return playerMatches;
       } else if (response.statusCode == 404) {
         _errorMessage = "Player not found.";
-        return []; // Return an empty list when no player is found
+        return [];
       } else {
         _errorMessage = "${response.statusCode}";
         throw Exception(
@@ -84,31 +84,31 @@ class ValorantPageState extends State<ValorantPage> {
     return Scaffold(
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
-        title: Text("Player Info"),
+        title: const Text("Player Info"),
         centerTitle: true,
       ),
-      drawer: DrawerNav(),
+      drawer: const DrawerNav(),
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: Row(
               children: [
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search),
-                        SizedBox(width: 8),
+                        const Icon(Icons.search),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
                             controller: _usernameController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: "Search For Username",
                               border: InputBorder.none,
                             ),
@@ -119,14 +119,14 @@ class ValorantPageState extends State<ValorantPage> {
                           height: 30,
                           color: Colors.black,
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.tag),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.tag),
+                        const SizedBox(width: 8),
                         SizedBox(
                           width: 75,
                           child: TextField(
                             controller: _tagController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: "Tag",
                               border: InputBorder.none,
                             ),
@@ -139,7 +139,7 @@ class ValorantPageState extends State<ValorantPage> {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
@@ -160,58 +160,52 @@ class ValorantPageState extends State<ValorantPage> {
                   });
                 }
               },
-              child: Text(
-                "Search",
-                style: TextStyle(fontSize: 18), // Increase font size
-              ),
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                padding: EdgeInsets.symmetric(
-                    vertical: 16, horizontal: 32), // Increase padding
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+              ),
+              child: const Text(
+                "Search",
+                style: TextStyle(fontSize: 18),
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   if (_isLoading)
-                    Center(child: CircularProgressIndicator())
+                    const Center(child: CircularProgressIndicator())
                   else if (_errorMessage.isNotEmpty)
-                    Center(
-                        child: Text(
-                            _errorMessage)) // Display this message if no player data was found
+                    Center(child: Text(_errorMessage))
                   else
                     ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      // Disable ListView's own scrolling
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      // Make ListView take only necessary space
                       itemCount: infoMap.length,
                       itemBuilder: (context, index) {
-                        var match = infoMap[index]; // Get current match data
+                        var match = infoMap[index];
                         return InkWell(
-                          // Using InkWell for visual feedback on tap
                           onTap: () {
-                            print('Navigating to MatchInfo with data: $match');
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      MatchInfo(match: match)),
+                                builder: (context) => MatchInfo(match: match),
+                              ),
                             );
                           },
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.deepPurple),
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
+                              color: isDarkMode ? Colors.black : Colors.white,
                             ),
-                            margin: EdgeInsets.all(8),
-                            padding: EdgeInsets.all(8),
+                            margin: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -219,29 +213,32 @@ class ValorantPageState extends State<ValorantPage> {
                                   children: [
                                     Image.network(
                                       match['characterIconSmall'],
-                                      // Agent icon
                                       width: 30,
                                       height: 30,
                                     ),
-                                    SizedBox(width: 50),
+                                    const SizedBox(width: 50),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text('Map: ${match['map']}',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
                                           Text(
-                                              'Game Mode: ${match['gameMode']}',
-                                              style: TextStyle(fontSize: 16)),
+                                            'Map: ${match['map']}',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            'Game Mode: ${match['gameMode']}',
+                                            style:
+                                                const TextStyle(fontSize: 16),
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -265,7 +262,7 @@ class ValorantPageState extends State<ValorantPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Player Data',
@@ -287,12 +284,12 @@ class ValorantPageState extends State<ValorantPage> {
     });
     switch (index) {
       case 1:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => WeaponPage()),
+          MaterialPageRoute(builder: (context) => const WeaponPage()),
         );
     }
   }
 }
 
-void main() => runApp(MaterialApp(home: ValorantPage()));
+void main() => runApp(const MaterialApp(home: ValorantPage()));

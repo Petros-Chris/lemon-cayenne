@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lemon_cayenne/Drawer.dart';
+import 'package:lemon_cayenne/drawer.dart';
 import 'package:lemon_cayenne/Theme/theme.dart';
 import 'package:lemon_cayenne/Theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Theme/color_theme.dart';
 import 'const.dart';

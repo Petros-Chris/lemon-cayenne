@@ -7,7 +7,7 @@ var renderViewVal = "full";
 
 List<String> renderView = ['full', 'bust', 'face'];
 String url = "";
-String difficulty = "";
+String difficulty = "Easy";
 var renderTypeVal = "default";
 final List<String> rendertype = [
   'archer',

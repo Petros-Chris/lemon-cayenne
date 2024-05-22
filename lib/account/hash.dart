@@ -9,7 +9,7 @@ String generateSalt() {
 }
 
 String hashPassword(String password, String salt) {
-  final codec = Utf8Codec();
+  const codec = Utf8Codec();
   final key = codec.encode(password);
   final hmac = Hmac(sha256, codec.encode(salt));
   final digest = hmac.convert(key);

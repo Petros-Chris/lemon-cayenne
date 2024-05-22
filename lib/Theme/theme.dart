@@ -14,7 +14,6 @@ final Map<String, int> stringToInt = {
   'Dark': 2,
 };
 
-
 const inputColor = LinearGradient(
   begin: Alignment.centerLeft,
   end: Alignment.centerRight,
@@ -25,23 +24,21 @@ const inputColor = LinearGradient(
 );
 
 final ThemeData amoledTheme = ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.purple,
-    brightness: Brightness.dark,
-    background: Colors.black,
-  ),
-  drawerTheme: const DrawerThemeData(
-    backgroundColor: Colors.black,
-  ),
-  snackBarTheme: const SnackBarThemeData(
-    backgroundColor: Colors.black,
-    contentTextStyle: TextStyle(color: Colors.white),
-  ),
-  textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(foregroundColor: Colors.red)
-  )
-);
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: Colors.purple,
+      brightness: Brightness.dark,
+      background: Colors.black,
+    ),
+    drawerTheme: const DrawerThemeData(
+      backgroundColor: Colors.black,
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: Colors.black,
+      contentTextStyle: TextStyle(color: Colors.white),
+    ),
+    textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(foregroundColor: Colors.red)));
 
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
