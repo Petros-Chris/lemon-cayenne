@@ -85,6 +85,8 @@ flutter:
   assets:
     - assets/lemon.png
     - assets/minecraftIcon.png
+    - assets/Valorant.png
+    - assets/aim.png
     - assets/Valorant_Images/Ascendant_1_Rank.png
     - assets/Valorant_Images/Ascendant_2_Rank.png
     - assets/Valorant_Images/Ascendant_3_Rank.png

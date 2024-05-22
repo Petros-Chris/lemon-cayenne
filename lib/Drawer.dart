@@ -70,10 +70,10 @@ class _DrawerNavState extends State<DrawerNav> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: Image.asset('assets/Valorant.png', width: 25,),
             title: const Row(
               children: [
-                Text('Valorant Api'),
+                Text('Valorant Info'),
                 Expanded(child: SizedBox()),
                 Icon(Icons.arrow_right_sharp),
               ],
@@ -106,18 +106,20 @@ class _DrawerNavState extends State<DrawerNav> {
           ),
           const Divider(height: 0),
           ListTile(
-            leading: const Icon(Icons.videogame_asset),
+            leading: Image.asset('assets/aim.png', width: 25,),
             title: const Row(
               children: [
-                Text('Game'),
+                Text('Aim Game'),
                 Expanded(child: SizedBox()),
                 Icon(Icons.arrow_right_sharp),
               ],
             ),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => GameMenu()));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const GameMenu()),
+              );
             },
           ),
           const Divider(height: 0),

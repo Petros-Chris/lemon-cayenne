@@ -602,6 +602,7 @@ class _MinecraftCustomLookState extends State<MinecraftCustomLook> {
                                 id: 10,
                                 channelKey: 'download_channel',
                                 title: 'File Has Been Downloaded',
+                                bigPicture: 'assets://assets/lemon',
                               ),
                             );
                             openPhotosApp();

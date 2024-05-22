@@ -43,10 +43,7 @@ class _GameMenuState extends State<GameMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawerEdgeDragWidth: MediaQuery
-          .of(context)
-          .size
-          .width,
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
         title: Text("Difficulty: $difficulty"),
         centerTitle: true,
@@ -54,6 +51,7 @@ class _GameMenuState extends State<GameMenu> {
       drawer: const DrawerNav(),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
               width: 300,
@@ -70,14 +68,24 @@ class _GameMenuState extends State<GameMenu> {
                 ],
               ),
             ),
-            const Expanded(child: SizedBox()),
-            Text('Highest Score On Easy: $highestScoreEasy'),
-            Text('Highest Score On Medium: $highestScoreMedium'),
-            Text('Highest Score On Hard: $highestScoreHard'),
-            Text('Highest Score On Insane: $highestScoreInsane'),
-            const SizedBox(
-              height: 30,
+            const SizedBox(height: 40),
+            Text(
+              'Highest Score On Easy: $highestScoreEasy',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
+            Text(
+              'Highest Score On Medium: $highestScoreMedium',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Text(
+              'Highest Score On Hard: $highestScoreHard',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Text(
+              'Highest Score On Insane: $highestScoreInsane',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 40),
             SizedBox(
               height: 50,
               width: 200,
@@ -89,35 +97,99 @@ class _GameMenuState extends State<GameMenu> {
                 child: const Text("Play"),
               ),
             ),
-            const SizedBox(
-              height: 150,
-            ),
-            const Text("Difficulty"),
+            const SizedBox(height: 40),
+            const Text("Difficulty", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(onPressed: () {
-                  setState(() {
-                    difficulty = "Easy";
-                  });
-                }, child: const Text("Easy")),
-                ElevatedButton(onPressed: () {
-                  setState(() {
-                    difficulty = "Medium";
-                  });
-                }, child: const Text("Medium")),
-                ElevatedButton(onPressed: () {
-                  setState(() {
-                    difficulty = "Hard";
-                  });
-                }, child: const Text("Hard")),
-                ElevatedButton(onPressed: () {
-                  setState(() {
-                    difficulty = "Insane";
-                  });
-                }, child: const Text("Insane")),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          difficulty = "Easy";
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        side: BorderSide(color: Colors.grey, width: 2.0),
+                      ),
+                      child: const Text("Easy"),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          difficulty = "Medium";
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        side: BorderSide(color: Colors.grey, width: 2.0),
+                      ),
+                      child: const Text("Medium"),
+                    ),
+                  ),
+                ),
               ],
-            )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          difficulty = "Hard";
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        side: BorderSide(color: Colors.grey, width: 2.0),
+                      ),
+                      child: const Text("Hard"),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          difficulty = "Insane";
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        side: BorderSide(color: Colors.grey, width: 2.0),
+                      ),
+                      child: const Text("Insane"),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

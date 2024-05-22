@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Center(
-            child: Text("Your Username Or Password Is Incdforrect"),
+            child: Text("Your Username Or Password Is Incorrect"),
           ),
           duration: Duration(seconds: 1),
         ),

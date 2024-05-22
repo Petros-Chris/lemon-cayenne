@@ -34,6 +34,7 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
   double oldLeft = 0;
 
   void movement() {
+startMovementTimer();
     final random = Random();
     setState(() {
       score += 100;
@@ -45,6 +46,8 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
       }
       oldLeft = left;
       oldTop = top;
+
+
     });
   }
 
@@ -54,16 +57,16 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
     double time = 0;
     switch (difficulty) {
       case 'Easy':
-        time = 10 * 1000;
+        time = 1500;
         break;
       case 'Medium':
-        time = 0.5 * 1000;
+        time = 750;
         break;
       case 'Hard':
-        time = 0.2 * 1000;
+        time = 500;
         break;
       case 'Insane':
-        time = 0.02 * 1000;
+        time = 300;
         break;
       default:
         time = 10 * 1000;
@@ -86,6 +89,7 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
   }
 
   void startTimer() {
+
     time?.cancel();
 
     time = Timer.periodic(

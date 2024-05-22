@@ -3,15 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:lemon_cayenne/Drawer.dart';
 import 'dart:convert';
 import 'matchInfo.dart';
-
 import 'package:lemon_cayenne/valorant/weaponPage.dart';
-
 
 final String apiKey = 'HDEV-6497b6fd-49e8-4e07-afcf-ac3beaaecb7d';
 final String baseUrl = 'https://api.henrikdev.xyz/valorant/v3';
 bool _isLoading = false;
 String _errorMessage = '';
-
 
 class ValorantPage extends StatefulWidget {
   const ValorantPage({super.key});
@@ -28,11 +25,10 @@ class ValorantPageState extends State<ValorantPage> {
   var decodedResponse;
   bool flag = false;
 
-
   @override
   Widget build(BuildContext context) {
-
-    Future<List<Map<String, dynamic>>> getMatches(String region, String name, String tag) async {
+    Future<List<Map<String, dynamic>>> getMatches(
+        String region, String name, String tag) async {
       var url = Uri.parse('$baseUrl/matches/$region/$name/$tag');
       var response = await http.get(url, headers: {'Authorization': apiKey});
 
@@ -45,9 +41,10 @@ class ValorantPageState extends State<ValorantPage> {
         for (var match in matches) {
           List<dynamic> players = match['players']['all_players'];
           Map<String, dynamic>? player = players.firstWhere(
-                  (p) => p['name'].toLowerCase() == name.toLowerCase() && p['tag'].toLowerCase() == tag.toLowerCase(),
-              orElse: () => null
-          );
+              (p) =>
+                  p['name'].toLowerCase() == name.toLowerCase() &&
+                  p['tag'].toLowerCase() == tag.toLowerCase(),
+              orElse: () => null);
 
           if (player != null) {
             String agentIconUrl = player['assets']['agent']['small'];
@@ -57,7 +54,8 @@ class ValorantPageState extends State<ValorantPage> {
               'kills': player['stats']['kills'],
               'deaths': player['stats']['deaths'],
               'assists': player['stats']['assists'],
-              'score': '${match['teams']['red']['rounds_won']}-${match['teams']['blue']['rounds_won']}',
+              'score':
+                  '${match['teams']['red']['rounds_won']}-${match['teams']['blue']['rounds_won']}',
               'map': match['metadata']['map'],
               'gameMode': match['metadata']['mode'],
               'characterIconSmall': agentIconUrl,
@@ -78,180 +76,194 @@ class ValorantPageState extends State<ValorantPage> {
         return []; // Return an empty list when no player is found
       } else {
         _errorMessage = "${response.statusCode}";
-        throw Exception('Failed to load matches with status code: ${response.statusCode}');
-
+        throw Exception(
+            'Failed to load matches with status code: ${response.statusCode}');
       }
     }
-
 
     return Scaffold(
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
       appBar: AppBar(
-        title: Text(
-          "Player Info"),
+        title: Text("Player Info"),
         centerTitle: true,
-
       ),
       drawer: DrawerNav(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-              child: Row(
-                children: [
-                  Container(
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
                       children: [
                         Icon(Icons.search),
-                        SizedBox(
-                          width: 200,
+                        SizedBox(width: 8),
+                        Expanded(
                           child: TextField(
                             controller: _usernameController,
                             decoration: InputDecoration(
-                                hintText: "Search For Username",
-                                border: UnderlineInputBorder(
-                                    borderSide: BorderSide.none)),
+                              hintText: "Search For Username",
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.search),
+                        Container(
+                          width: 1,
+                          height: 30,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 8),
+                        Icon(Icons.tag),
+                        SizedBox(width: 8),
                         SizedBox(
                           width: 75,
                           child: TextField(
                             controller: _tagController,
                             decoration: InputDecoration(
-                                hintText: "Tag",
-                                border: UnderlineInputBorder(
-                                    borderSide: BorderSide.none)),
+                              hintText: "Tag",
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 20,
-                  ),
-
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ElevatedButton(
+              onPressed: () {
+                if (_usernameController.text.isNotEmpty &&
+                    _tagController.text.isNotEmpty) {
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  getMatches(
+                          'NA', _usernameController.text, _tagController.text)
+                      .then((matches) {
+                    setState(() {
+                      infoMap = matches;
+                      _isLoading = false;
+                    });
+                  });
+                }
+              },
+              child: Text(
+                "Search",
+                style: TextStyle(fontSize: 18), // Increase font size
+              ),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                padding: EdgeInsets.symmetric(
+                    vertical: 16, horizontal: 32), // Increase padding
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (_isLoading)
+                    Center(child: CircularProgressIndicator())
+                  else if (_errorMessage.isNotEmpty)
+                    Center(
+                        child: Text(
+                            _errorMessage)) // Display this message if no player data was found
+                  else
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      // Disable ListView's own scrolling
+                      shrinkWrap: true,
+                      // Make ListView take only necessary space
+                      itemCount: infoMap.length,
+                      itemBuilder: (context, index) {
+                        var match = infoMap[index]; // Get current match data
+                        return InkWell(
+                          // Using InkWell for visual feedback on tap
+                          onTap: () {
+                            print('Navigating to MatchInfo with data: $match');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MatchInfo(match: match)),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.deepPurple),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+                            margin: EdgeInsets.all(8),
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.network(
+                                      match['characterIconSmall'],
+                                      // Agent icon
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                    SizedBox(width: 50),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Map: ${match['map']}',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text(
+                                              'Game Mode: ${match['gameMode']}',
+                                              style: TextStyle(fontSize: 16)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text('Kills: ${match['kills']}'),
+                                    Text('Deaths: ${match['deaths']}'),
+                                    Text('Assists: ${match['assists']}'),
+                                    Text('Score: ${match['score']}'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
-                  if (_usernameController.text.isNotEmpty && _tagController.text.isNotEmpty) {
-                    FocusScope.of(context).unfocus();
-                    setState(() { _isLoading = true; });
-                    getMatches('NA', _usernameController.text, _tagController.text).then((matches) {
-                      setState(() {
-                        infoMap = matches;
-                        _isLoading = false;
-                      });
-                    });
-                  }
-                },
-                child: Text("Search")
-            ),
-
-
-
-
-            if (_isLoading)
-              Center(child: CircularProgressIndicator())
-            else if (_errorMessage.isNotEmpty)
-              Center(child: Text(_errorMessage)) // Display this message if no player data was found
-            else
-              Container(
-                width: 500,
-                height: 530,
-                child: ListView.builder(
-                  itemCount: infoMap.length,
-                  itemBuilder: (context, index) {
-                    var match = infoMap[index]; // Get current match data
-                    return InkWell(  // Using InkWell for visual feedback on tap
-                      onTap: () {
-                        print('Navigating to MatchInfo with data: $match');
-                        // Future.delayed(Duration(seconds: 5),
-                        //
-                        // );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MatchInfo(match: match)),
-                        );
-
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ),
-                        margin: EdgeInsets.all(8),
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Image.network(
-                                  match['characterIconSmall'], // Agent icon
-                                  width: 30,
-                                  height: 30,
-                                ),
-                                SizedBox(width: 50),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('Map: ${match['map']}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                      Text('Game Mode: ${match['gameMode']}', style: TextStyle(fontSize: 16)),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text('Kills: ${match['kills']}'),
-                                Text('Deaths: ${match['deaths']}'),
-                                Text('Assists: ${match['assists']}'),
-                                Text('Score: ${match['score']}'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-
-
-
-          ],
-        ),
-
+          ),
+        ],
       ),
-
-
-
-
-
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -282,4 +294,5 @@ class ValorantPageState extends State<ValorantPage> {
     }
   }
 }
-//yes
+
+void main() => runApp(MaterialApp(home: ValorantPage()));
