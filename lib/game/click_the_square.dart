@@ -49,6 +49,21 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
     });
   }
 
+  void movementBegin() {
+    startMovementTimer();
+    final random = Random();
+    setState(() {
+      top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
+      left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+      while ((left - oldLeft).abs() < 100 || (top - oldTop).abs() < 100) {
+        left = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
+        top = random.nextDouble() * (MediaQuery.of(context).size.height - 180);
+      }
+      oldLeft = left;
+      oldTop = top;
+    });
+  }
+
   void startMovementTimer() {
     movementTime?.cancel();
     final random = Random();
@@ -204,7 +219,15 @@ class _ClickTheSquareState extends State<ClickTheSquare> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    movement();
+    movementBegin();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    movementTime?.cancel();
+    time?.cancel();
   }
 
   @override
