@@ -47,7 +47,7 @@ dependencies:
   awesome_notifications: any
   flutter_displaymode: any
   url_launcher: any
-  android_intent: any
+#  android_intent: any
   open_file: any
   dio: any
 
@@ -55,6 +55,9 @@ dependencies:
   path_provider: any
   permission_handler: any
 
+  fluttertoast: ^8.0.9
+  firebase_auth: ^5.5.1
+  google_sign_in: ^6.2.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2

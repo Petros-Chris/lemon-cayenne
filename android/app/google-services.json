@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "796686073144",
     "project_id": "lemoncayennebase",
-    "storage_bucket": "lemoncayennebase.appspot.com"
+    "storage_bucket": "lemoncayennebase.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "lemon.cayenne.base"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "796686073144-7m8ln324rv9o13at3j5hfh2up8lkfqaq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lemon.cayenne.base",
+            "certificate_hash": "bba1d9e299b8d565dfbe1d72ee728784b34d4b85"
+          }
+        },
+        {
+          "client_id": "796686073144-ueqi57hcskhe1cqv6kcb8hqkm2sfuapr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAQKPur-nsOR6jRoX_pf4d1O4YW_UAzdsE"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "796686073144-ueqi57hcskhe1cqv6kcb8hqkm2sfuapr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
